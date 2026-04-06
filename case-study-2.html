@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Building a Design System from Scratch — Harshitha Kalindi</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500&f[]=cabinet-grotesk@400,500,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #F7F5F0;
+    --cream-mid: #EDEAE3;
+    --ink: #1a1714;
+    --ink-muted: #5c5652;
+    --ink-faint: #8a7f78;
+    --terracotta: #C1672A;
+    --terracotta-light: #FAECE7;
+    --border: rgba(0,0,0,0.07);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Satoshi', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 0.5px solid rgba(255,255,255,0.07);
+    background: #1a1714;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-left { display: flex; align-items: center; gap: 0.75rem; }
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    flex-shrink: 0;
+  }
+  .nav-eyebrow {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 15px;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: rgba(255,255,255,0.85); }
+
+  /* PAGE */
+  .page { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* HERO */
+  .hero {
+    background: #1a1714;
+    padding: 5rem 1.5rem 4.5rem;
+    text-align: center;
+  }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 1.75rem;
+    display: block;
+  }
+  .hero-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(38px, 6vw, 70px);
+    font-weight: 500;
+    line-height: 1.1;
+    color: #F7F5F0;
+    max-width: 820px;
+    margin: 0 auto 1.25rem;
+    letter-spacing: -0.02em;
+  }
+  .hero-module {
+    font-size: 16px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.04em;
+  }
+
+  /* META STRIP */
+  .meta-strip {
+    background: #1a1714;
+    border-top: 0.5px solid rgba(255,255,255,0.08);
+    padding: 2rem 1.5rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 5rem;
+  }
+  .meta-strip-item { text-align: left; }
+  .meta-strip-label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    font-weight: 500;
+    margin-bottom: 0.1.5rem;
+  }
+  .meta-strip-value {
+    font-size: 17px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 400;
+  }
+
+  /* NDA NOTICE */
+  .nda-notice {
+    background: var(--cream-mid);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    font-size: 15px;
+    color: var(--ink-faint);
+    font-style: italic;
+    line-height: 1.6;
+    margin: 1.5rem 0 0;
+    text-align: center;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 3.5rem 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .section-num {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+  .section-heading {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 1.25rem;
+  }
+  .body {
+    font-size: 17px;
+    color: var(--ink-muted);
+    line-height: 1.85;
+    margin-bottom: 1rem;
+  }
+  .body strong { color: var(--ink); font-weight: 500; }
+  .body:last-child { margin-bottom: 0; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--terracotta-light);
+    border-left: 3px solid var(--terracotta);
+    border-radius: 0 10px 10px 0;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .callout-label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+  }
+  .callout-text {
+    font-size: 17px;
+    color: var(--ink);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* PRINCIPLES GRID */
+  .principles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.75rem;
+  }
+  .principle-card {
+    background: #fff;
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .principle-num {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .principle-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .principle-body {
+    font-size: 15px;
+    color: var(--ink-muted);
+    line-height: 1.65;
+  }
+
+  /* FOUNDATION BLOCKS */
+  .foundation-block {
+    margin-bottom: 2.5rem;
+  }
+  .foundation-block:last-child { margin-bottom: 0; }
+  .foundation-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+  }
+
+  /* COMPONENT LIST */
+  .component-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 1.5rem;
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .component-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .component-row:last-child { border-bottom: none; }
+  .component-name {
+    padding: 1rem 1.25rem;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    border-right: 0.5px solid var(--border);
+    background: var(--cream);
+    display: flex;
+    align-items: flex-start;
+    padding-top: 1.1rem;
+  }
+  .component-desc {
+    padding: 1rem 1.25rem;
+    font-size: 15px;
+    color: var(--ink-muted);
+    line-height: 1.65;
+  }
+
+  /* IMPACT LIST */
+  .impact-list {
+    list-style: none;
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .impact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 17px;
+    color: var(--ink-muted);
+    line-height: 1.65;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .impact-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .impact-list li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    flex-shrink: 0;
+    margin-top: 8px;
+    opacity: 0.6;
+  }
+  .impact-list li strong { color: var(--ink); font-weight: 500; }
+
+  /* REFLECTION */
+  .reflection {
+    background: var(--cream-mid);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    font-size: 16px;
+    color: var(--ink-muted);
+    line-height: 1.75;
+  }
+  .reflection strong { color: var(--ink); font-weight: 500; }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 0.5px solid var(--border);
+    font-size: 14px;
+    color: var(--ink-faint);
+    font-style: italic;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  /* NEXT / FOOTER */
+  .next-case {
+    text-align: center;
+    padding: 3.5rem 1.5rem;
+    background: var(--ink);
+  }
+  .next-label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6b6460;
+    margin-bottom: 0.75rem;
+  }
+  .next-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #F7F5F0;
+  }
+  .next-title a { color: inherit; text-decoration: none; }
+  .next-title a:hover { opacity: 0.7; }
+
+  footer {
+    border-top: 0.5px solid var(--border);
+    padding: 1.5rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1060px;
+    margin: 0 auto;
+  }
+  .footer-name {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 16px;
+    color: var(--ink-faint);
+  }
+  .footer-links { display: flex; gap: 1.75rem; list-style: none; }
+  .footer-links a {
+    font-size: 15px;
+    color: var(--ink-faint);
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: var(--ink); }
+
+  .thank-you {
+    text-align: center;
+    padding: 1.5rem 1.5rem 1rem;
+    overflow: hidden;
+  }
+  .thank-you-text {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(62px, 14vw, 162px);
+    font-weight: 500;
+    color: var(--ink);
+    opacity: 0.05;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    user-select: none;
+  }
+
+  @media (max-width: 700px) {
+    nav { padding: 0.75rem 1rem; }
+    .hero { padding: 3.5rem 1rem 3rem; }
+    .hero-title { font-size: clamp(26px, 7vw, 42px); }
+    .hero-sub { font-size: 15px; }
+    .meta-strip { flex-direction: column; gap: 1.5rem; padding: 1.5rem 1rem; align-items: flex-start; }
+    .page { padding: 0 1rem; }
+    .section { padding: 2rem 0; }
+    .section-heading { font-size: 22px; }
+    .body { font-size: 15px; }
+
+    /* Principles grid — stack to single column */
+    .principles-grid { grid-template-columns: 1fr; }
+    .principle-card { padding: 1.1rem; }
+    .principle-title { font-size: 16px; }
+    .principle-body { font-size: 14px; }
+
+    /* Component list — stack name and detail */
+    .component-row { grid-template-columns: 1fr; }
+    .component-name { padding: 0.75rem 1rem 0.25rem; font-size: 14px; }
+    .component-detail { padding: 0.25rem 1rem 0.75rem; font-size: 13px; }
+
+    .callout { padding: 1rem 1.1rem; font-size: 14px; }
+    .reflection { font-size: 14px; padding: 1rem; }
+    .next-case { padding: 2.5rem 1rem; }
+    footer { padding: 1.25rem 1rem; flex-direction: column; gap: 1rem; text-align: center; }
+    .thank-you { padding: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-left">
+    <a href="index.html" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.08);cursor:pointer;text-decoration:none;transition:background 0.2s;" title="Back to home">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+        <polyline points="9 21 9 12 15 12 15 21"/>
+      </svg>
+    </a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="index.html#leadership">Design Leadership</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="eyebrow">Case Study 02 · Design Systems</span>
+  <h1 class="hero-title">Building a design system from scratch.</h1>
+  <p class="hero-module">Establishing a shared design language across product, marketing, and client-facing surfaces</p>
+</div>
+
+<!-- META STRIP -->
+<div class="meta-strip">
+  <div class="meta-strip-item">
+    <div class="meta-strip-label">Product</div>
+    <div class="meta-strip-value">EffiGO eProcurement</div>
+  </div>
+  <div class="meta-strip-item">
+    <div class="meta-strip-label">My Role</div>
+    <div class="meta-strip-value">Lead Designer</div>
+  </div>
+  <div class="meta-strip-item">
+    <div class="meta-strip-label">Scope</div>
+    <div class="meta-strip-value">Foundations + Component Library</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="nda-notice">
+    This case study is written without visuals in compliance with a confidentiality agreement. I'm happy to walk through the work in detail during a conversation.
+  </div>
+
+  <!-- 01 CONTEXT -->
+  <div class="section">
+    <span class="section-num">01 — Context</span>
+    <h2 class="section-heading">No system, no shared language</h2>
+    <p class="body">EffiGO is an enterprise eProcurement platform serving clients across sourcing, procurement, dispatch, and contract management. As the product grew across modules, so did the inconsistency — each area developed its own visual patterns, component styles, and interaction logic independently.</p>
+    <p class="body">The problem wasn't isolated to the product. Marketing materials, client presentations, and the platform itself all looked like they came from different companies. There was no brand system, no shared component set, and no common language between designers and developers.</p>
+    <p class="body">I helped design the system from the ground up — establishing foundations, designing the component library, and working directly with the development team through handoff.</p>
+  </div>
+
+  <!-- 02 THE PROBLEM -->
+  <div class="section">
+    <span class="section-num">02 — The Problem</span>
+    <h2 class="section-heading">One product, no shared visual logic</h2>
+    <p class="body">The inconsistency manifested differently across surfaces but came from the same root cause: every team was making design decisions independently, with no reference point. The cost showed up in multiple ways.</p>
+    <p class="body">Each module used its own layout logic, spacing rules, and component styles — making the product feel like a collection of separate tools rather than a unified platform. Dashboards, tables, and configuration-heavy forms followed different visual and interaction patterns, so <strong>users had to relearn the interface</strong> each time they moved between modules.</p>
+    <p class="body">Complex admin and workflow screens became dense and hard to scan because no hierarchy principles were applied consistently. Information sat at equal visual weight regardless of priority.</p>
+    <p class="body">Beyond the product, marketing decks and client presentations looked visually disconnected from what clients actually used day to day. There was no brand system tying surfaces together.</p>
+
+    <div class="callout">
+      <div class="callout-label">The development cost</div>
+      <div class="callout-text">Without a shared component library, the same UI patterns were being rebuilt from scratch across modules — time spent on solved problems rather than new ones.</div>
+    </div>
+  </div>
+
+  <!-- 03 APPROACH -->
+  <div class="section">
+    <span class="section-num">03 — Approach</span>
+    <h2 class="section-heading">Principles before pixels</h2>
+    <p class="body">Before building a single component, I established the principles that would govern every decision. For a data-heavy enterprise product, the constraints were specific: components had to work across dense admin tables and sparse empty states, across tight and wide viewports, and for both technical and non-technical users.</p>
+    <p class="body">The sequencing was deliberate: <strong>foundations first</strong> — colour, typography, spacing — then components. Without a stable foundation, every component decision becomes a negotiation. With it, components almost design themselves.</p>
+
+    <div class="principles-grid">
+      <div class="principle-card">
+        <div class="principle-num">Principle 01</div>
+        <div class="principle-title">Clarity over decoration</div>
+        <div class="principle-body">Every visual decision had to earn its place by aiding comprehension. Nothing decorative that didn't carry meaning.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">Principle 02</div>
+        <div class="principle-title">Density without noise</div>
+        <div class="principle-body">Enterprise workflows require dense UIs. The system had to support high information density without creating visual chaos — structure through hierarchy, not decoration.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">Principle 03</div>
+        <div class="principle-title">Predictable patterns</div>
+        <div class="principle-body">Users moving between modules should never have to relearn how something works. Consistency reduces cognitive load across the whole product.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">Principle 04</div>
+        <div class="principle-title">Built for handoff</div>
+        <div class="principle-body">Every component needed to be documented well enough that a developer could implement it without a design walkthrough. The system had to work without me in the room.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 FOUNDATIONS -->
+  <div class="section">
+    <span class="section-num">04 — Foundations</span>
+    <h2 class="section-heading">A shared language for the whole product</h2>
+    <p class="body">Foundations are the decisions that everything else inherits from. Getting these right meant every component built on top of them would automatically feel consistent — without anyone having to consciously enforce it.</p>
+
+    <div class="foundation-block" style="margin-top:2rem;">
+      <div class="foundation-label">Colour</div>
+      <p class="body">A primary navy anchors the brand identity across product and marketing. A semantic status layer — green for success, red for error, amber for warning, a distinct burgundy for rejection — gives meaning to state across every module. These were not decorative choices; in a procurement workflow, the difference between a warning and a rejection carries real business consequence, and the colour system had to reflect that.</p>
+      <p class="body">A calibrated neutral text scale supports readability at every density level — from large dashboard headings down to 10px table metadata. Background and surface colours were chosen specifically for dense admin interfaces where users spend hours at a time.</p>
+    </div>
+
+    <div class="foundation-block">
+      <div class="foundation-label">Typography — Manrope + Poppins</div>
+      <p class="body">Two typefaces, each with a clear role. Manrope Extrabold handles headings and module titles — bringing structural weight to dashboards and navigation. Poppins covers all body text, form labels, table data, and metadata, with a weight range from Regular through Bold.</p>
+      <p class="body">The type scale runs from 32px headings to 10px metadata, with every size and weight combination named and documented — so a developer could implement from spec without approximating from visual inspection.</p>
+    </div>
+
+    <div class="foundation-block">
+      <div class="foundation-label">Spacing and layout</div>
+      <p class="body">A standardised spacing system replaced the ad hoc padding and margin decisions that had made screens inconsistent. Consistent component spacing, section padding, and grid behaviour created predictable layouts across modules — reducing the cognitive effort of moving between different parts of the product.</p>
+    </div>
+  </div>
+
+  <!-- 05 COMPONENTS -->
+  <div class="section">
+    <span class="section-num">05 — Components</span>
+    <h2 class="section-heading">Every state, every edge case</h2>
+    <p class="body">The hardest part of building components for an enterprise system isn't the default state — it's everything else. Empty, loading, error, disabled, focused, filled, indeterminate. Every component had to handle the full range of states that a complex procurement workflow would surface.</p>
+    <p class="body">Full component documentation cannot be shared due to NDA. Below is an overview of scope and coverage.</p>
+
+    <div class="component-list">
+      <div class="component-row">
+        <div class="component-name">Text fields</div>
+        <div class="component-desc">Single-line and multi-line variants. Default, focused, filled, disabled, and error states — each with and without helper text. Character counters for length-constrained inputs.</div>
+      </div>
+      <div class="component-row">
+        <div class="component-name">Dropdowns</div>
+        <div class="component-desc">Single select, multi-select with inline checkboxes, grouped options, and action menu variants. Each handling default, open, hover, selected, and disabled states. Behaviour aligned with how developers would implement it, not just how it looks in isolation.</div>
+      </div>
+      <div class="component-row">
+        <div class="component-name">Banners</div>
+        <div class="component-desc">Four semantic variants — default, warning, success, error — using status colours from the foundation. Dismissible, with consistent icon treatment. Used across the product for system messages, workflow alerts, and validation feedback.</div>
+      </div>
+      <div class="component-row">
+        <div class="component-name">Notifications</div>
+        <div class="component-desc">With and without user avatar, compact and expanded layouts, with dismiss and action link variants. Designed to work in both panel and inline contexts across different modules.</div>
+      </div>
+      <div class="component-row">
+        <div class="component-name">Tags + status indicators</div>
+        <div class="component-desc">Progress indicators with percentage rings, status message tags (approved, rejected, toast notifications), and dismissible action tags with icon support. Used extensively across approval workflows and supplier management screens.</div>
+      </div>
+      <div class="component-row">
+        <div class="component-name">Navigation</div>
+        <div class="component-desc">Sidebar in collapsed and expanded states. Active, hover, and default item variants. Icon-only mode for high-density layouts. Expandable sub-navigation for modules with deep hierarchies. Designed to accommodate the platform's 15+ module structure without visual overwhelm.</div>
+      </div>
+      <div class="component-row">
+        <div class="component-name">File uploads</div>
+        <div class="component-desc">Empty drop zone, uploading state with progress bar, uploaded state with preview and delete, error state with retry — with and without template download option. Procurement workflows involve heavy document handling, so this component needed to cover every real state users encounter.</div>
+      </div>
+      <div class="component-row">
+        <div class="component-name">Radio, checkbox + toggles</div>
+        <div class="component-desc">Full state coverage including indeterminate states for bulk selection in tables. Toggle on and off states. Notification badge with unread count. The most used interaction patterns in configuration-heavy admin screens.</div>
+      </div>
+      <div class="component-row">
+        <div class="component-name">Date picker</div>
+        <div class="component-desc">Calendar view with selected date, today highlight, and range selection states. Date chip variants for selected, active, and disabled. Designed for submission deadline and contract date inputs across the sourcing flow.</div>
+      </div>
+      <div class="component-row">
+        <div class="component-name">Tooltips</div>
+        <div class="component-desc">Plain text, with header, and data summary variants — the latter designed specifically for pricing breakdown tooltips in procurement tables. All four directional positions documented.</div>
+      </div>
+      <div class="component-row">
+        <div class="component-name">Workflow builder</div>
+        <div class="component-desc">The most complex category. Connector lines with directional variants, condition builder patterns, flow type selectors, and approval chain configurators. These underpin the platform's conditional workflow engine — designed so non-technical users can configure complex approval logic without engineering support.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 DEVELOPER COLLABORATION -->
+  <div class="section">
+    <span class="section-num">06 — Developer Collaboration</span>
+    <h2 class="section-heading">Built with developers, not for them</h2>
+    <p class="body">Component feasibility was aligned with the development team before and during system creation — not after. This meant every component was technically viable before it was finalised in Figma, and developers understood the intent behind each state and variant rather than interpreting it post-handoff.</p>
+    <p class="body">Each component was reviewed collaboratively during handoff, with developer feedback incorporated into the final specs. Files were organised for clear implementation — consistent naming conventions, documented states, and grouped variants that matched how developers would actually structure the code.</p>
+    <p class="body">The team's response was immediate. Having a fixed reference meant they could concentrate on complex business logic rather than making visual decisions that should have been resolved in design. <strong>Ambiguity in handoff dropped significantly.</strong> Implementation became faster and more consistent.</p>
+  </div>
+
+  <!-- 07 IMPACT -->
+  <div class="section">
+    <span class="section-num">07 — Impact</span>
+    <h2 class="section-heading">From scattered patterns to a shared framework</h2>
+    <p class="body">What began as inconsistency across every surface evolved into a framework that simplified decisions and reduced friction — for designers, developers, and clients alike.</p>
+
+    <ul class="impact-list">
+      <li><strong>Product consistency</strong> — all new modules built using system components, no new one-off patterns introduced after launch</li>
+      <li><strong>Faster development</strong> — developers working from a shared library rather than rebuilding from scratch per module</li>
+      <li><strong>Brand coherence</strong> — marketing and client presentations unified with the product for the first time</li>
+      <li><strong>Reduced design rework</strong> — decisions made at system level rather than per screen, freeing designers to focus on harder problems</li>
+      <li><strong>Scalable foundation</strong> — new components and modules inherit foundations automatically, so the system grows without breaking existing patterns</li>
+      <li><strong>Developer confidence</strong> — reduced ambiguity in handoff, implementation decisions no longer left to interpretation</li>
+    </ul>
+
+    <p class="body" style="margin-top:1.75rem;">The design system was not a deliverable — it was infrastructure. The real measure of success was that it became invisible: designers stopped debating component decisions, developers stopped improvising visual logic, and the product started feeling like a single coherent tool rather than a collection of modules.</p>
+
+    <div class="reflection">
+      <strong>If given more time:</strong> I would have introduced a formal token layer — separating primitive values from semantic assignments to make theming and future brand updates easier to propagate across the system without touching individual components.
+    </div>
+
+    <div class="disclaimer">
+      Full component documentation cannot be shared due to NDA restrictions. I'd be happy to walk through the complete system, individual component decisions, and the handoff process during a conversation.
+    </div>
+  </div>
+
+</div><!-- end .page -->
+
+<!-- NEXT CASE -->
+<div class="next-case">
+  <p class="next-label">Next case study</p>
+  <p class="next-title"><a href="case-study-ai.html">AI as a Design Collaborator →</a></p>
+</div>
+
+<!-- THANK YOU -->
+<div class="thank-you">
+  <div class="thank-you-text">THANK YOU</div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-name">Harshitha Kalindi</span>
+  <ul class="footer-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#">Work</a></li>
+    <li><a href="index.html#leadership">Design Leadership</a></li>
+  </ul>
+</footer>
+
+</body>
+</html>
