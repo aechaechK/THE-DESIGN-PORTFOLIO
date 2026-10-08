@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sourcing Module Redesign — Harshitha Kalidindi</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500&f[]=cabinet-grotesk@400,500,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #F7F5F0;
+    --cream-mid: #EDEAE3;
+    --ink: #1a1714;
+    --ink-muted: #5c5652;
+    --ink-faint: #8a7f78;
+    --terracotta: #C1672A;
+    --terracotta-light: #FAECE7;
+    --green-light: #EBF5EC;
+    --green-mid: #4A8C4F;
+    --border: rgba(0,0,0,0.07);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Satoshi', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 0.5px solid rgba(255,255,255,0.07);
+    background: #1a1714;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    flex-shrink: 0;
+  }
+  .nav-eyebrow {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 15px;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: rgba(255,255,255,0.85); }
+
+  /* PAGE */
+  .page { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* HERO — dark full-bleed */
+  .hero {
+    background: #1a1714;
+    padding: 5rem 1.5rem 4.5rem;
+    text-align: center;
+  }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 1.75rem;
+    display: block;
+  }
+  .hero-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(38px, 6vw, 70px);
+    font-weight: 500;
+    line-height: 1.1;
+    color: #F7F5F0;
+    max-width: 820px;
+    margin: 0 auto 1.25rem;
+    letter-spacing: -0.02em;
+  }
+  .hero-module {
+    font-size: 16px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.04em;
+    margin-top: 0;
+  }
+  .hero-sub {
+    display: none;
+  }
+  .hero-tags {
+    display: none;
+  }
+  .tag {
+    display: none;
+  }
+
+  /* META STRIP — sits below dark hero */
+  .meta-strip {
+    background: #1a1714;
+    border-top: 0.5px solid rgba(255,255,255,0.08);
+    padding: 2rem 1.5rem 3rem;
+    display: flex;
+    justify-content: center;
+    gap: 5rem;
+  }
+  .meta-strip-item { text-align: left; }
+  .meta-strip-label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+  .meta-strip-value {
+    font-size: 17px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 400;
+  }
+
+  /* STAT STRIP */
+  .stat-strip {
+    display: flex;
+    gap: 0;
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    margin: 2.5rem 0 0;
+  }
+  .stat-item {
+    flex: 1;
+    padding: 1rem 1.25rem;
+    border-right: 0.5px solid var(--border);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+  }
+  .stat-value {
+    font-size: 16px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 3.5rem 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .section-num {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+  .section-heading {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 1.25rem;
+  }
+  .body {
+    font-size: 17px;
+    color: var(--ink-muted);
+    line-height: 1.85;
+    margin-bottom: 1rem;
+  }
+  .body strong { color: var(--ink); font-weight: 500; }
+  .body:last-child { margin-bottom: 0; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--terracotta-light);
+    border-left: 3px solid var(--terracotta);
+    border-radius: 0 10px 10px 0;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .callout-label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+  }
+  .callout-text {
+    font-size: 17px;
+    color: var(--ink);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* QUOTE GRID */
+  .quote-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .quote-card {
+    background: #fff;
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem 1.5rem;
+  }
+  .quote-stat {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 30px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 0.65rem;
+    line-height: 1;
+  }
+  .quote-text {
+    font-size: 15px;
+    color: var(--ink-muted);
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 0.4rem;
+  }
+  .quote-attr {
+    font-size: 13px;
+    color: var(--ink-faint);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  /* DECISION CARDS */
+  .decision-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.75rem;
+  }
+  .decision-card {
+    background: #fff;
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .decision-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .decision-title {
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .decision-badge {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green-mid);
+    background: var(--green-light);
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .decision-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 0.75rem;
+  }
+  .decision-col-label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+  }
+  .decision-col-text {
+    font-size: 15px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+  }
+  .decision-tradeoff {
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+    border-top: 0.5px solid var(--border);
+    font-size: 14px;
+    color: var(--ink-faint);
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .decision-tradeoff span {
+    color: var(--ink-muted);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  /* SCREENS */
+  .screens-intro {
+    font-size: 15px;
+    color: var(--ink-faint);
+    font-style: italic;
+    margin-bottom: 1.75rem;
+    line-height: 1.6;
+  }
+  .screen-block {
+    margin-bottom: 2rem;
+  }
+  .screen-label-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+  .screen-num {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 500;
+    background: var(--cream-mid);
+    padding: 3px 10px;
+    border-radius: 100px;
+  }
+  .screen-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .screen-desc {
+    font-size: 15px;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+  }
+  .screen-img-wrap {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+    background: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  }
+  .screen-img-wrap img {
+    width: 100%;
+    display: block;
+  }
+
+  /* ANNOTATION PILLS — replicate the green callout style from the screens */
+  .annotation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .annotation {
+    display: list-item;
+    list-style: none;
+    padding-left: 1.2rem;
+    position: relative;
+    font-size: 14px;
+    color: var(--ink-muted);
+    line-height: 1.5;
+  }
+  .annotation::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green-mid);
+    position: absolute;
+    left: 0;
+    top: 8px;
+  }
+  .annotation strong { color: var(--ink); font-weight: 500; }
+
+  /* RESULTS */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 1.75rem 0;
+  }
+  .result-card {
+    background: #fff;
+    border: 0.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+  .result-stat {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .result-label {
+    font-size: 14px;
+    color: var(--ink-muted);
+    line-height: 1.4;
+  }
+
+  /* REFLECTION */
+  .reflection {
+    background: var(--cream-mid);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    font-size: 16px;
+    color: var(--ink-muted);
+    line-height: 1.75;
+  }
+  .reflection strong { color: var(--ink); font-weight: 500; }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 0.5px solid var(--border);
+    font-size: 14px;
+    color: var(--ink-faint);
+    font-style: italic;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  /* NEXT / FOOTER */
+  .next-case {
+    text-align: center;
+    padding: 3.5rem 1.5rem;
+    background: var(--ink);
+  }
+  .next-label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6b6460;
+    margin-bottom: 0.75rem;
+  }
+  .next-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #F7F5F0;
+  }
+  .next-title a { color: inherit; text-decoration: none; }
+  .next-title a:hover { opacity: 0.7; }
+
+  footer {
+    border-top: 0.5px solid var(--border);
+    padding: 1.5rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1060px;
+    margin: 0 auto;
+  }
+  .footer-name {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 16px;
+    color: var(--ink-faint);
+  }
+  .footer-links {
+    display: flex;
+    gap: 1.75rem;
+    list-style: none;
+  }
+  .footer-links a {
+    font-size: 15px;
+    color: var(--ink-faint);
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: var(--ink); }
+
+  .thank-you {
+    text-align: center;
+    padding: 1.5rem 3rem 1rem;
+    overflow: hidden;
+  }
+  .thank-you-text {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(62px, 14vw, 162px);
+    font-weight: 400;
+    color: var(--ink);
+    opacity: 0.05;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    user-select: none;
+  }
+
+  @media (max-width: 700px) {
+    nav { padding: 0.75rem 1rem; }
+    .hero { padding: 3.5rem 1rem 3rem; }
+    .hero-title { font-size: clamp(26px, 7vw, 42px); }
+    .hero-sub { font-size: 15px; }
+    .meta-strip { flex-direction: column; gap: 1.5rem; padding: 1.5rem 1rem; align-items: flex-start; }
+    .page { padding: 0 1rem; }
+    .section { padding: 2rem 0; }
+    .section-heading { font-size: 22px; }
+    .body { font-size: 15px; }
+
+    /* Decision grid — stack to single column */
+    .decision-grid { grid-template-columns: 1fr; }
+    .decision-card { padding: 1.1rem; }
+
+    /* Results grid — stack to single column */
+    .results-grid { grid-template-columns: 1fr; }
+    .result-card { padding: 1.1rem; }
+
+    /* Outcomes/stats — stack to 2 columns */
+    .outcomes-grid { grid-template-columns: 1fr 1fr; }
+
+    /* Screen blocks */
+    .screen-img-wrap img { border-radius: 6px; }
+    .screen-title { font-size: 16px; }
+    .screen-desc { font-size: 14px; }
+    .annotation { font-size: 14px; }
+
+    .callout { padding: 1rem 1.1rem; font-size: 14px; }
+    .reflection { font-size: 14px; padding: 1rem; }
+    .disclaimer { font-size: 13px; padding: 1rem; }
+    .next-case { padding: 2.5rem 1rem; }
+    footer { padding: 1.25rem 1rem; flex-direction: column; gap: 1rem; text-align: center; }
+    .thank-you { padding: 1rem; }
+  }
+
+  /* WIREFRAME SCREENS (replace confidential screenshots) */
+  .screen-img-wrap { padding: 1rem; }
+  .wf { width: 100%; height: auto; display: block; }
+  .wf .fr { fill: #fff; stroke: rgba(0,0,0,0.1); }
+  .wf .top { fill: var(--cream-mid); }
+  .wf .cd { fill: var(--cream); stroke: rgba(0,0,0,0.07); }
+  .wf .in { fill: #fff; stroke: rgba(0,0,0,0.1); }
+  .wf .b1 { fill: #E6E2DA; }
+  .wf .b2 { fill: #D3CDC2; }
+  .wf .ln { stroke: #D3CDC2; stroke-width: 1.5; fill: none; }
+  .wf .acc { fill: var(--terracotta); }
+  .wf .acc-l { fill: var(--terracotta-light); }
+  .wf .gr { fill: var(--green-mid); }
+  .wf .gr-l { fill: var(--green-light); }
+  .wf .gr-s { stroke: var(--green-mid); fill: none; stroke-width: 2.5; }
+  .wf .ink { fill: var(--ink); }
+  .wf .chk { stroke: #fff; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .wf .dash { fill: none; stroke: #D3CDC2; stroke-width: 1.5; stroke-dasharray: 5 4; }
+  .wf text { font-family: 'Satoshi', sans-serif; }
+  .wf .t-sm { font-size: 11px; fill: var(--ink-faint); font-weight: 500; letter-spacing: 0.04em; }
+  .wf .t-md { font-size: 13px; fill: var(--ink); font-weight: 500; }
+  .wf .t-acc { font-size: 11px; fill: var(--terracotta); font-weight: 700; letter-spacing: 0.04em; }
+  .wf .t-gr { font-size: 11px; fill: var(--green-mid); font-weight: 700; letter-spacing: 0.04em; }
+  @media (max-width: 700px) { .screen-img-wrap { padding: 0.5rem; } }
+
+  /* DECISIONS — stacked with wireframes */
+  .decision-row { grid-template-columns: 1fr; gap: 1.5rem; }
+  .decision-visual { background: var(--cream); border-radius: 10px; padding: 10px; margin-top: 0.75rem; }
+  .decision-visual svg { display: block; width: 100%; height: auto; }
+  .decision-visual svg text { font-family: 'Satoshi', sans-serif; }
+
+  /* OUTCOMES */
+  .results-grid { text-align: left; }
+  .result-card { text-align: left; }
+  .outcome-note { font-size: 14px; color: var(--ink-faint); font-style: italic; line-height: 1.6; margin-top: 0.25rem; }
+  @media (max-width: 700px) { .results-grid { grid-template-columns: 1fr 1fr; } }
+
+  /* HERO — moving pixel grid background */
+  .hero-wrap { position: relative; background: #1a1714; overflow: hidden; }
+  .hero-grid { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+  .hero-fade { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 48% 52% at 50% 40%, #1a1714 35%, rgba(26,23,20,.65) 65%, rgba(26,23,20,0) 100%),
+                linear-gradient(to top, rgba(26,23,20,.85) 0%, rgba(26,23,20,.4) 18%, rgba(26,23,20,0) 35%); }
+  .hero-wrap .hero, .hero-wrap .meta-strip { position: relative; z-index: 1; background: transparent; }
+  .hero-wrap .meta-strip { border-top: none; }
+
+  /* ===== shared header + footer (matches the homepage) ===== */
+  .hk-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; display: flex; justify-content: center; padding: 1.1rem 1.5rem; pointer-events: none; }
+  .hk-pill { pointer-events: auto; display: flex; align-items: center; background: #1a1714; border-radius: 100px; overflow-x: auto; scrollbar-width: none; max-width: calc(100vw - 20px); box-shadow: 0 0 0 1px rgba(247,245,240,.14); }
+  .hk-pill::-webkit-scrollbar { display: none; }
+  .hk-pill a { position: relative; font-family: 'Satoshi', sans-serif; font-size: 15px; color: rgba(255,255,255,.75); text-decoration: none; padding: 8px 22px; white-space: nowrap; transition: color .2s, background .2s; }
+  .hk-pill a:hover { color: #fff; background: rgba(255,255,255,.08); }
+  .hk-pill a.hk-here { color: #fff; }
+  .hk-pill a.hk-here::before { content: ''; position: absolute; left: 9px; top: 50%; width: 6px; height: 6px; margin-top: -3px; background: #F2C05C; }
+  .hk-home { display: flex !important; align-items: center; padding: 8px 16px 8px 20px !important; }
+  .hk-home svg { width: 22px; height: 18px; display: block; }
+  .hk-div { width: 1px; height: 16px; background: rgba(255,255,255,.15); flex: none; }
+  .hero-wrap { padding-top: 64px; }
+  .hk-ft { max-width: 1072px; margin: 3rem auto 16px; width: calc(100% - 32px); border-radius: 20px; overflow: hidden; background-color: #1a1714; color: #F7F5F0;
+    background-image: linear-gradient(rgba(247,245,240,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(247,245,240,.06) 1px, transparent 1px); background-size: 16px 16px; }
+  .hk-ft-in { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1.4rem 1.75rem; }
+  .hk-status { display: inline-flex; align-items: center; gap: 9px; font-family: 'VT323', monospace; font-size: 17px; line-height: 1; padding: 5px 10px 4px; box-shadow: 0 0 0 2px rgba(247,245,240,.18); background: rgba(247,245,240,.06); margin: 0 0 .7rem; color: #F7F5F0; }
+  .hk-status i { width: 9px; height: 9px; background: #A9C862; animation: hkBlink 1.4s steps(1) infinite; }
+  @keyframes hkBlink { 50% { opacity: .25; } }
+  .hk-ft-h { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 500; font-size: 24px; line-height: 1.2; letter-spacing: -.02em; margin: 0; color: #F7F5F0; }
+  .hk-ft-h span { font-family: 'VT323', monospace; font-weight: 400; letter-spacing: 0; font-size: 1.05em; color: #F2C05C; white-space: nowrap; }
+  .hk-btn { flex: none; font-family: 'VT323', monospace; font-size: 22px; line-height: 1; padding: 11px 18px 10px; background: #CEF17B; color: #1F4A2C; text-decoration: none; transition: background .12s steps(2), transform .12s steps(2); }
+  .hk-btn:hover, .hk-btn:focus-visible { background: #C2E86A; }
+  .hk-btn:active { background: #B4DB5C; transform: translateY(2px); }
+  .hk-btn:focus-visible { outline: 2px solid #CEF17B; outline-offset: 3px; }
+  .hk-ft-bottom { font-family: 'VT323', monospace; font-size: 16px; color: rgba(247,245,240,.45); padding: .7rem 1.75rem; border-top: 1px solid rgba(247,245,240,.1); background: rgba(26,23,20,.7); }
+  @media (max-width: 700px) {
+    .hk-nav { padding: .9rem 10px; }
+    .hk-pill a { padding: 8px 16px; font-size: 14px; }
+    .hk-home { padding: 8px 12px 8px 16px !important; }
+    .hk-pill a.hk-here { padding-left: 24px; }
+    .hero-wrap { padding-top: 58px; }
+    .hk-ft { width: calc(100% - 20px); margin-bottom: 10px; }
+    .hk-ft-in { flex-direction: column; align-items: flex-start; padding: 1.3rem 1.2rem; }
+    .hk-ft-h { font-size: 21px; }
+    .hk-ft-bottom { padding: .7rem 1.2rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .hk-status i { animation: none; } }
+
+
+  /* ===== side contents: structure on the left, full story on the right ===== */
+  .cs-layout { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 64px; align-items: start; }
+  .cs-layout > .page { max-width: 820px; width: 100%; margin: 0; padding: 0; min-width: 0; }
+  .cs-toc { position: sticky; top: 92px; padding-top: 4.5rem; max-height: calc(100vh - 110px); overflow-y: auto; scrollbar-width: none; }
+  .cs-toc::-webkit-scrollbar { display: none; }
+  .cs-back { display: inline-flex; align-items: center; gap: 8px; font-family: 'VT323', monospace; font-size: 19px; letter-spacing: .04em; color: var(--ink-muted, #6b655d); text-decoration: none; margin-bottom: 1.6rem; }
+  .cs-back:hover { color: var(--ink, #1a1714); }
+  .cs-back b { font-weight: 400; transition: transform .2s steps(2); display: inline-block; }
+  .cs-back:hover b { transform: translateX(-4px); }
+  .cs-toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .cs-toc a.cs-item { position: relative; display: flex; align-items: baseline; gap: 10px; padding: 7px 0 7px 16px; font-size: 15px; line-height: 1.35; color: var(--ink-faint, #9a938a); text-decoration: none; transition: color .2s; }
+  .cs-toc a.cs-item span { font-family: 'VT323', monospace; font-size: 16px; color: inherit; opacity: .8; min-width: 18px; }
+  .cs-toc a.cs-item::before { content: ''; position: absolute; left: 0; top: 50%; width: 6px; height: 6px; margin-top: -3px; background: #F2C05C; opacity: 0; transition: opacity .15s steps(2); }
+  .cs-toc a.cs-item:hover { color: var(--ink, #1a1714); }
+  .cs-toc a.cs-item.on { color: var(--ink, #1a1714); font-weight: 500; }
+  .cs-toc a.cs-item.on::before { opacity: 1; }
+  .cs-anchor { scroll-margin-top: 96px; }
+  @media (max-width: 960px) {
+    .cs-layout { display: block; padding: 0; }
+    .cs-layout > .page { max-width: 820px; margin: 0 auto; padding: 0 1.5rem; }
+    .cs-toc { position: sticky; top: 62px; z-index: 50; max-height: none; padding: 10px 0; margin: 0; background: var(--cream, #F7F5F0); border-bottom: 1px solid rgba(26,23,20,.08); overflow-x: auto; overflow-y: hidden; }
+    .cs-back { display: none; }
+    .cs-toc ol { flex-direction: row; gap: 6px; padding: 0 1rem; width: max-content; }
+    .cs-toc a.cs-item { padding: 6px 10px 5px; white-space: nowrap; font-size: 13px; box-shadow: inset 0 0 0 1.5px rgba(26,23,20,.15); }
+    .cs-toc a.cs-item::before { display: none; }
+    .cs-toc a.cs-item.on { background: #CEF17B; color: #1F4A2C; box-shadow: none; }
+    .cs-anchor { scroll-margin-top: 120px; }
+  }
+
+
+  /* ===== next case study: pixel card ===== */
+  .nx-wrap { max-width: 1072px; width: calc(100% - 32px); margin: 5rem auto 0; }
+  .nx-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: .8rem; font-family: 'VT323', monospace; font-size: 19px; color: var(--ink-muted, #6b655d); }
+  .nx-all { color: var(--ink-muted, #6b655d); text-decoration: none; }
+  .nx-all:hover { color: var(--ink, #1a1714); }
+  .nx-pips { display: inline-flex; align-items: center; gap: 6px; }
+  .nx-pips i { width: 10px; height: 10px; box-shadow: inset 0 0 0 2px rgba(26,23,20,.3); }
+  .nx-pips i.on { background: #1a1714; box-shadow: none; }
+  a.nx { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1.8rem 2rem; border-radius: 20px; text-decoration: none; color: #F7F5F0; background-color: #1a1714;
+    background-image: linear-gradient(rgba(247,245,240,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(247,245,240,.06) 1px, transparent 1px); background-size: 16px 16px; transition: transform .2s steps(3); }
+  a.nx:hover { transform: translateY(-3px); }
+  .nx-label { display: flex; align-items: center; gap: 10px; font-family: 'VT323', monospace; font-size: 20px; color: #F2C05C; margin: 0 0 .7rem; }
+  .nx-num { font-size: 19px; line-height: 1; padding: 3px 7px 2px; background: #F7F5F0; color: #1a1714; }
+  .nx-title { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 500; font-size: clamp(22px, 2.6vw, 30px); line-height: 1.2; letter-spacing: -.015em; margin: 0 0 1rem; color: #F7F5F0; }
+  .nx-facts { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
+  .nx-facts li { font-family: 'VT323', monospace; font-size: 17px; line-height: 1; padding: 5px 9px 4px; color: rgba(247,245,240,.85); box-shadow: inset 0 0 0 1.5px rgba(247,245,240,.2); }
+  .nx-go { flex: none; display: inline-flex; align-items: center; gap: 10px; font-family: 'VT323', monospace; font-size: 24px; line-height: 1; padding: 13px 20px 12px; background: #CEF17B; color: #1F4A2C; transition: background .12s steps(2); }
+  .nx-go b { font-weight: 400; display: inline-block; transition: transform .2s steps(2); }
+  a.nx:hover .nx-go { background: #C2E86A; }
+  a.nx:hover .nx-go b { transform: translateX(5px); }
+  a.nx:focus-visible { outline: 2px solid #CEF17B; outline-offset: 4px; }
+  .hk-ft { margin-top: 1.5rem !important; }
+  @media (max-width: 700px) {
+    .nx-wrap { width: calc(100% - 20px); margin-top: 3.5rem; }
+    a.nx { flex-direction: column; align-items: flex-start; gap: 1.2rem; padding: 1.4rem 1.2rem; }
+    .nx-top { font-size: 17px; }
+  }
+  @media (prefers-reduced-motion: reduce) { a.nx, .nx-go b { transition: none; } }
+
+
+  /* ===== interactive wireframes ===== */
+  .wf .wf-click { cursor: pointer; }
+  .wf .wf-click:hover { filter: brightness(.96); }
+  .wf .wf-pulse { animation: wfPulse 1.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  @keyframes wfPulse { 50% { transform: scale(1.35); } }
+  .wf .wf-pop { animation: wfPop .35s ease; transform-box: fill-box; transform-origin: center; }
+  @keyframes wfPop { 0% { transform: scale(.4); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
+  .wf .wf-arrow { transition: transform .25s ease; }
+  .screen-img-wrap:hover .wf .wf-arrow { transform: translateY(-5px); }
+  .wf .wf-typing { animation: wfDots 1s ease-in-out infinite; }
+  @keyframes wfDots { 50% { transform: translateY(-3px); opacity: .5; } }
+  .wf .wf-in { animation: wfIn .35s ease; }
+  @keyframes wfIn { from { transform: translateY(6px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .wf .wf-pin { transition: transform .35s cubic-bezier(.3,.7,.2,1); }
+  .wf .wf-flag { animation: wfFlag 1.6s ease-in-out infinite; }
+  @keyframes wfFlag { 50% { opacity: .35; } }
+  .wf .wf-caret { animation: wfCaret 1s steps(1) infinite; }
+  @keyframes wfCaret { 50% { opacity: 0; } }
+  .wf .wf-layer { pointer-events: none; }
+  .wf .wf-mask { fill: rgba(247,245,240,.72); opacity: 0; transition: opacity .2s; }
+  .wf .wf-ring { fill: none; stroke: var(--terracotta); stroke-width: 2; stroke-dasharray: 6 4; opacity: 0; transition: opacity .2s; }
+  .wf .wf-layer.on .wf-mask, .wf .wf-layer.on .wf-ring { opacity: 1; }
+  .wf .wf-badge { pointer-events: auto; cursor: pointer; }
+  .wf .wf-badge circle { fill: var(--ink); stroke: #fff; stroke-width: 2; transition: fill .15s; }
+  .wf .wf-badge text { font-family: 'VT323', monospace; font-size: 15px; fill: #fff; pointer-events: none; }
+  .wf .wf-badge.on circle, .wf .wf-badge:hover circle { fill: var(--terracotta); }
+  .wf-live .annotation { cursor: default; transition: background .15s, box-shadow .15s; border-radius: 8px; }
+  .wf-live .annotation.on { background: #fff; box-shadow: inset 3px 0 0 var(--terracotta); }
+  .wf-num { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; margin-right: 8px; border-radius: 50%; background: var(--ink); color: #fff; font-family: 'VT323', monospace; font-size: 15px; line-height: 1; vertical-align: 1px; transition: background .15s; }
+  .wf-live .annotation.on .wf-num { background: var(--terracotta); }
+  .wf-live .annotation::before { display: none !important; }
+  .wf-live .annotation { padding-left: .4rem !important; }
+  .screen-img-wrap { position: relative; }
+  .wf-hint { display: block; margin-top: .5rem; font-family: 'VT323', monospace; font-size: 16px; color: var(--ink-faint); }
+  @media (prefers-reduced-motion: reduce) { .wf * { animation: none !important; transition: none !important; } }
+
+</style>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAV -->
+<div class="hk-nav" role="navigation" aria-label="Main">
+  <div class="hk-pill">
+    <a class="hk-home" href="index.html#home" aria-label="Home"><svg viewBox="0 0 11 9" shape-rendering="crispEdges" aria-hidden="true"><rect x="5" y="0" width="1" height="1" fill="#B5C2EC"/><rect x="4" y="1" width="1" height="1" fill="#B5C2EC"/><rect x="5" y="1" width="1" height="1" fill="#7487C8"/><rect x="4" y="2" width="1" height="1" fill="#B5C2EC"/><rect x="5" y="2" width="1" height="1" fill="#7487C8"/><rect x="6" y="2" width="1" height="1" fill="#7487C8"/><rect x="3" y="3" width="1" height="1" fill="#B5C2EC"/><rect x="4" y="3" width="1" height="1" fill="#B5C2EC"/><rect x="5" y="3" width="1" height="1" fill="#7487C8"/><rect x="6" y="3" width="1" height="1" fill="#7487C8"/><rect x="3" y="4" width="1" height="1" fill="#B5C2EC"/><rect x="4" y="4" width="1" height="1" fill="#7487C8"/><rect x="5" y="4" width="1" height="1" fill="#7487C8"/><rect x="6" y="4" width="1" height="1" fill="#7487C8"/><rect x="7" y="4" width="1" height="1" fill="#7487C8"/><rect x="2" y="5" width="1" height="1" fill="#B5C2EC"/><rect x="3" y="5" width="1" height="1" fill="#B5C2EC"/><rect x="4" y="5" width="1" height="1" fill="#7487C8"/><rect x="5" y="5" width="1" height="1" fill="#7487C8"/><rect x="6" y="5" width="1" height="1" fill="#7487C8"/><rect x="7" y="5" width="1" height="1" fill="#7487C8"/><rect x="8" y="5" width="1" height="1" fill="#7487C8"/><rect x="2" y="6" width="1" height="1" fill="#F2C05C"/><rect x="3" y="6" width="1" height="1" fill="#F2C05C"/><rect x="4" y="6" width="1" height="1" fill="#F2C05C"/><rect x="5" y="6" width="1" height="1" fill="#F2C05C"/><rect x="6" y="6" width="1" height="1" fill="#F2C05C"/><rect x="7" y="6" width="1" height="1" fill="#F2C05C"/><rect x="8" y="6" width="1" height="1" fill="#F2C05C"/><rect x="0" y="7" width="1" height="1" fill="#7487C8"/><rect x="1" y="7" width="1" height="1" fill="#7487C8"/><rect x="2" y="7" width="1" height="1" fill="#7487C8"/><rect x="3" y="7" width="1" height="1" fill="#7487C8"/><rect x="4" y="7" width="1" height="1" fill="#7487C8"/><rect x="5" y="7" width="1" height="1" fill="#7487C8"/><rect x="6" y="7" width="1" height="1" fill="#7487C8"/><rect x="7" y="7" width="1" height="1" fill="#7487C8"/><rect x="8" y="7" width="1" height="1" fill="#7487C8"/><rect x="9" y="7" width="1" height="1" fill="#7487C8"/><rect x="10" y="7" width="1" height="1" fill="#7487C8"/><rect x="1" y="8" width="1" height="1" fill="#7487C8"/><rect x="2" y="8" width="1" height="1" fill="#7487C8"/><rect x="3" y="8" width="1" height="1" fill="#7487C8"/><rect x="4" y="8" width="1" height="1" fill="#7487C8"/><rect x="5" y="8" width="1" height="1" fill="#7487C8"/><rect x="6" y="8" width="1" height="1" fill="#7487C8"/><rect x="7" y="8" width="1" height="1" fill="#7487C8"/><rect x="8" y="8" width="1" height="1" fill="#7487C8"/><rect x="9" y="8" width="1" height="1" fill="#7487C8"/></svg></a>
+    <span class="hk-div"></span><a href="index.html#work" class="hk-here">Work</a>
+    <span class="hk-div"></span><a href="index.html#leadership">Design Leadership</a>
+    <span class="hk-div"></span><a href="index.html#about">About</a>
+    <span class="hk-div"></span><a href="harshitha-kalidindi-resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <span class="hk-div"></span><a href="sustainability.html">Sustainability Project</a>
+  </div>
+</div>
+
+<!-- HERO — dark full-bleed, centered, with moving pixel grid -->
+<div class="hero-wrap" id="heroWrap">
+<canvas class="hero-grid" id="heroGrid" aria-hidden="true"></canvas>
+<div class="hero-fade" aria-hidden="true"></div>
+<div class="hero">
+  <span class="eyebrow">Case Study 01</span>
+  <h1 class="hero-title">Making progress and ownership visible in enterprise sourcing.</h1>
+  <p class="hero-module">Showcasing the sourcing module redesign</p>
+</div>
+
+<!-- META STRIP -->
+<div class="meta-strip">
+  <div class="meta-strip-item">
+    <div class="meta-strip-label">Product</div>
+    <div class="meta-strip-value">SaaS / Enterprise Procurement</div>
+  </div>
+  <div class="meta-strip-item">
+    <div class="meta-strip-label">My Role</div>
+    <div class="meta-strip-value">Lead UX Designer</div>
+  </div>
+  <div class="meta-strip-item">
+    <div class="meta-strip-label">Users</div>
+    <div class="meta-strip-value">200+ daily across 3 roles</div>
+  </div>
+</div>
+</div><!-- end .hero-wrap -->
+
+<div class="cs-layout">
+<aside class="cs-toc" aria-label="On this page">
+  <a class="cs-back" href="index.html#work"><b aria-hidden="true">←</b> BACK</a>
+  <ol>
+    <li><a class="cs-item" href="#s-overview"><span>01</span>Overview</a></li>
+    <li><a class="cs-item" href="#s-the-problem"><span>02</span>The Problem</a></li>
+    <li><a class="cs-item" href="#s-the-solution"><span>03</span>The Solution</a></li>
+    <li><a class="cs-item" href="#s-outcomes"><span>04</span>Outcomes</a></li>
+    <li><a class="cs-item" href="#s-research"><span>05</span>Research</a></li>
+    <li><a class="cs-item" href="#s-design-decisions"><span>06</span>Design Decisions</a></li>
+    <li><a class="cs-item" href="#s-reflection"><span>07</span>Reflection</a></li>
+  </ol>
+</aside>
+<div class="page">
+
+  <!-- 01 OVERVIEW -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-overview">01 — Overview</span>
+    <h2 class="section-heading">Designing for a complex ecosystem</h2>
+    <p class="body">The platform operates within a highly interconnected system of users, workflows, and dependent modules. I led the redesign as <strong>lead designer</strong> — working closely with a product manager, the operations team, and the development team from research through to handoff.</p>
+    <p class="body">The challenge was not just simplifying the interface, but doing so without breaking <strong>established mental models</strong> — ensuring continuity, trust, and ease of adoption across a live client base.</p>
+  </div>
+
+  <!-- 02 THE PROBLEM -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-the-problem">02 — The Problem</span>
+    <h2 class="section-heading">A workflow that felt harder than it was</h2>
+    <p class="body">The Sourcing module lets users create RFX requests, invite suppliers, collect pricing, and evaluate responses. The actions were simple — largely form-based — but the experience felt <strong>fragmented and mentally taxing</strong> due to scattered steps and poorly connected screens.</p>
+    <p class="body">The business impact was direct: <strong>slow client adoption</strong> and <strong>high support overhead</strong> during onboarding. My hypothesis going in was that the module had a significant <strong>information hierarchy problem</strong> — too much data at equal weight, with no clear signal about what mattered most at each step.</p>
+
+    <div class="callout">
+      <div class="callout-label">Core insight</div>
+      <div class="callout-text">Users had no reliable sense of status — they couldn't tell where a request was, who had acted, or what was expected next. This reframed the brief: the problem wasn't reducing steps, it was making progress and ownership visible throughout the flow.</div>
+    </div>
+  </div>
+
+  <!-- 03 SOLUTION: KEY SCREENS -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-the-solution">03 — The Solution</span>
+    <h2 class="section-heading">A role-aware, 5-step flow, screen by screen</h2>
+    <p class="screens-intro">Simplified wireframes of the four key screens. Each annotation maps to a design decision further down.</p>
+
+    <!-- Screen 1: RFX Creation -->
+    <div class="screen-block">
+      <div class="screen-label-row">
+        <span class="screen-num">Screen 01</span>
+        <span class="screen-title">RFX Creation — step-by-step form</span>
+      </div>
+      <p class="screen-desc">The RFX creation flow restructured from scattered pages into a single grouped, multi-step form with persistent progress tracking.</p>
+      <div class="screen-img-wrap">
+        <svg class="wf" viewBox="0 0 640 400" role="img" aria-label="Wireframe of the RFX creation form with a five-step indicator, grouped fields, approver assignment, inline document upload and a saved-status chip.">
+            <rect class="fr" x="0.5" y="0.5" width="639" height="399" rx="12"/>
+            <path class="top" d="M12.5 0.5 h615 a12 12 0 0 1 12 12 v22 h-639 v-22 a12 12 0 0 1 12 -12z"/>
+            <circle class="b2" cx="20" cy="18" r="4"/><circle class="b2" cx="34" cy="18" r="4"/><circle class="b2" cx="48" cy="18" r="4"/>
+            <!-- stepper -->
+            <line class="ln" x1="110" y1="66" x2="530" y2="66"/>
+            <line class="gr-s" x1="110" y1="66" x2="320" y2="66"/>
+            <circle class="gr" cx="110" cy="66" r="10"/><path class="chk" d="M105.5 66 l3 3 l6 -6.5"/>
+            <circle class="gr" cx="215" cy="66" r="10"/><path class="chk" d="M210.5 66 l3 3 l6 -6.5"/>
+            <circle cx="320" cy="66" r="10" fill="#fff" stroke="#C1672A" stroke-width="2.5"/><circle class="acc" cx="320" cy="66" r="4"/>
+            <circle class="b1" cx="425" cy="66" r="10"/>
+            <circle class="b1" cx="530" cy="66" r="10"/>
+            <rect class="b1" x="90" y="84" width="40" height="5" rx="2.5"/><rect class="b1" x="195" y="84" width="40" height="5" rx="2.5"/>
+            <rect class="acc-l" x="300" y="84" width="40" height="5" rx="2.5"/><rect class="b1" x="405" y="84" width="40" height="5" rx="2.5"/><rect class="b1" x="510" y="84" width="40" height="5" rx="2.5"/>
+            <!-- grouped fields -->
+            <rect class="cd" x="40" y="110" width="360" height="192" rx="10"/>
+            <rect class="b2" x="60" y="128" width="110" height="8" rx="4"/>
+            <rect class="b1" x="60" y="152" width="70" height="6" rx="3"/><rect class="in" x="60" y="163" width="320" height="24" rx="6"/>
+            <rect class="b1" x="60" y="198" width="70" height="6" rx="3"/><rect class="in" x="60" y="209" width="150" height="24" rx="6"/>
+            <rect class="b1" x="230" y="198" width="70" height="6" rx="3"/><rect class="in" x="230" y="209" width="150" height="24" rx="6"/>
+            <rect class="b1" x="60" y="244" width="70" height="6" rx="3"/><rect class="in" x="60" y="255" width="320" height="30" rx="6"/>
+            <!-- approvers -->
+            <rect class="cd" x="420" y="110" width="180" height="84" rx="10"/>
+            <rect class="b2" x="436" y="128" width="70" height="7" rx="3.5"/>
+            <circle class="b2" cx="448" cy="164" r="12"/><circle class="b2" cx="476" cy="164" r="12"/>
+            <circle cx="504" cy="164" r="12" class="dash"/><path d="M504 158 v12 M498 164 h12" stroke="#D3CDC2" stroke-width="1.5"/>
+            <!-- upload -->
+            <rect class="dash" x="420" y="208" width="180" height="94" rx="10"/>
+            <path d="M510 262 v-26 M500 246 l10 -10 l10 10" stroke="#D3CDC2" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect class="b1" x="470" y="276" width="80" height="6" rx="3"/>
+            <!-- footer -->
+            <line class="ln" x1="40" y1="322" x2="600" y2="322"/>
+            <rect class="gr-l" x="40" y="340" width="108" height="28" rx="14"/>
+            <circle class="gr" cx="57" cy="354" r="4"/><text class="t-gr" x="68" y="358">SAVED</text>
+            <rect class="b1" x="440" y="340" width="70" height="28" rx="8"/>
+            <rect class="acc" x="520" y="340" width="80" height="28" rx="8"/>
+          </svg>
+      </div>
+      <span class="wf-hint">▸ These wireframes are interactive: hover a number to see what it explains, and try the buttons.</span>
+      <div class="annotation-list" style="margin-top:0.85rem;">
+        <div class="annotation"><strong>5-step linear flow</strong> — users always know their position and what comes next</div>
+        <div class="annotation"><strong>All core RFX fields consolidated</strong> into one grouped section — previously scattered across separate pages</div>
+        <div class="annotation"><strong>Approver assignment happens at creation</strong> — eliminates a separate workflow step that caused delays</div>
+        <div class="annotation"><strong>Document upload inline with creation</strong> — previously required navigating to a separate module</div>
+        <div class="annotation"><strong>Persistent save at every step</strong> — progress is never lost if the user navigates away</div>
+      </div>
+    </div>
+
+    <!-- Screen 2: Evaluator View -->
+    <div class="screen-block">
+      <div class="screen-label-row">
+        <span class="screen-num">Screen 02</span>
+        <span class="screen-title">Evaluator View — role-scoped interface</span>
+      </div>
+      <p class="screen-desc">The evaluator interface surfaces only what's relevant to evaluation — reducing cognitive load and preventing cross-role confusion.</p>
+      <div class="screen-img-wrap">
+        <svg class="wf" viewBox="0 0 640 400" role="img" aria-label="Wireframe of the evaluator view with a summary row, negotiation round pills, role-scoped tabs with the evaluation tab first, a stage status card and an inline message panel.">
+            <rect class="fr" x="0.5" y="0.5" width="639" height="399" rx="12"/>
+            <path class="top" d="M12.5 0.5 h615 a12 12 0 0 1 12 12 v22 h-639 v-22 a12 12 0 0 1 12 -12z"/>
+            <circle class="b2" cx="20" cy="18" r="4"/><circle class="b2" cx="34" cy="18" r="4"/><circle class="b2" cx="48" cy="18" r="4"/>
+            <!-- summary -->
+            <rect class="cd" x="40" y="52" width="130" height="54" rx="8"/><rect class="cd" x="182" y="52" width="130" height="54" rx="8"/>
+            <rect class="cd" x="324" y="52" width="130" height="54" rx="8"/><rect class="cd" x="466" y="52" width="134" height="54" rx="8"/>
+            <rect class="b2" x="54" y="66" width="46" height="12" rx="4"/><rect class="b1" x="54" y="86" width="80" height="6" rx="3"/>
+            <rect class="b2" x="196" y="66" width="46" height="12" rx="4"/><rect class="b1" x="196" y="86" width="80" height="6" rx="3"/>
+            <rect class="b2" x="338" y="66" width="46" height="12" rx="4"/><rect class="b1" x="338" y="86" width="80" height="6" rx="3"/>
+            <rect class="b2" x="480" y="66" width="46" height="12" rx="4"/><rect class="b1" x="480" y="86" width="80" height="6" rx="3"/>
+            <!-- tabs -->
+            <line class="ln" x1="40" y1="148" x2="420" y2="148"/>
+            <text class="t-md" x="40" y="138">Evaluation Form</text>
+            <rect class="acc" x="40" y="145" width="108" height="3" rx="1.5"/>
+            <rect class="b1" x="168" y="130" width="56" height="8" rx="4"/><rect class="b1" x="240" y="130" width="56" height="8" rx="4"/><rect class="b1" x="312" y="130" width="56" height="8" rx="4"/>
+            <!-- rounds -->
+            <rect class="acc-l" x="40" y="164" width="52" height="22" rx="11"/><text class="t-acc" x="66" y="179" text-anchor="middle">R1</text>
+            <rect class="cd" x="100" y="164" width="52" height="22" rx="11"/><text class="t-sm" x="126" y="179" text-anchor="middle">R2</text>
+            <rect class="cd" x="160" y="164" width="52" height="22" rx="11"/><text class="t-sm" x="186" y="179" text-anchor="middle">R3</text>
+            <!-- main card -->
+            <rect class="cd" x="40" y="198" width="380" height="172" rx="10"/>
+            <rect class="b2" x="56" y="219" width="140" height="7" rx="3.5"/><rect class="in" x="250" y="212" width="150" height="22" rx="5"/>
+            <rect class="b2" x="56" y="257" width="120" height="7" rx="3.5"/><rect class="in" x="250" y="250" width="150" height="22" rx="5"/>
+            <rect class="b2" x="56" y="295" width="150" height="7" rx="3.5"/><rect class="in" x="250" y="288" width="150" height="22" rx="5"/>
+            <rect class="b2" x="56" y="333" width="110" height="7" rx="3.5"/><rect class="in" x="250" y="326" width="150" height="22" rx="5"/>
+            <!-- stage status -->
+            <rect class="cd" x="436" y="164" width="164" height="94" rx="10"/>
+            <rect class="b2" x="452" y="180" width="70" height="7" rx="3.5"/>
+            <circle class="gr" cx="458" cy="204" r="5"/><rect class="b1" x="470" y="201" width="80" height="6" rx="3"/>
+            <circle cx="458" cy="222" r="5" fill="#fff" stroke="#C1672A" stroke-width="2"/><rect class="b1" x="470" y="219" width="64" height="6" rx="3"/>
+            <rect class="b1" x="452" y="240" width="132" height="6" rx="3"/><rect class="gr" x="452" y="240" width="84" height="6" rx="3"/>
+            <!-- messages -->
+            <rect class="cd" x="436" y="270" width="164" height="100" rx="10"/>
+            <rect class="b1" x="452" y="284" width="100" height="18" rx="9"/>
+            <rect class="acc-l" x="484" y="308" width="100" height="18" rx="9"/>
+            <rect class="in" x="452" y="338" width="132" height="20" rx="10"/>
+          </svg>
+      </div>
+      <div class="annotation-list" style="margin-top:0.85rem;">
+        <div class="annotation"><strong>Live RFX summary</strong> — key metrics surfaced at the top so evaluators never have to dig for context</div>
+        <div class="annotation"><strong>Multi-round visibility</strong> — evaluators can track changes and responses across negotiation rounds in one place</div>
+        <div class="annotation"><strong>At-a-glance stage status</strong> — shows what's complete, what's in progress, and how much time remains</div>
+        <div class="annotation"><strong>Role-scoped tab structure</strong> — evaluators land on Evaluation Form directly, irrelevant tabs are deprioritised</div>
+        <div class="annotation"><strong>Contextual messaging inline</strong> — all communication tied to the RFX, no external email threads needed</div>
+      </div>
+    </div>
+
+    <!-- Screen 3: Comparison Sheet -->
+    <div class="screen-block">
+      <div class="screen-label-row">
+        <span class="screen-num">Screen 03</span>
+        <span class="screen-title">Comparison Sheet — side-by-side supplier evaluation</span>
+      </div>
+      <p class="screen-desc">The comparison sheet replaces the manual spreadsheet workaround that teams had built outside the platform.</p>
+      <div class="screen-img-wrap">
+        <svg class="wf" viewBox="0 0 640 400" role="img" aria-label="Wireframe of the comparison sheet with a technical or commercial toggle, suppliers ranked in columns, one pinned column and aligned criteria rows.">
+            <rect class="fr" x="0.5" y="0.5" width="639" height="399" rx="12"/>
+            <path class="top" d="M12.5 0.5 h615 a12 12 0 0 1 12 12 v22 h-639 v-22 a12 12 0 0 1 12 -12z"/>
+            <circle class="b2" cx="20" cy="18" r="4"/><circle class="b2" cx="34" cy="18" r="4"/><circle class="b2" cx="48" cy="18" r="4"/>
+            <!-- toggle -->
+            <rect class="cd" x="40" y="48" width="220" height="30" rx="15"/>
+            <rect class="ink" x="43" y="51" width="107" height="24" rx="12"/>
+            <text x="96.5" y="67" text-anchor="middle" style="font-size:11px;fill:#F7F5F0;font-weight:700;letter-spacing:.04em">TECHNICAL</text>
+            <text class="t-sm" x="205" y="67" text-anchor="middle">COMMERCIAL</text>
+            <!-- pinned column -->
+            <rect class="acc-l" x="170" y="96" width="107" height="274" rx="6"/>
+            <rect x="170" y="96" width="107" height="274" rx="6" fill="none" stroke="#C1672A" stroke-width="1.5"/>
+            <!-- header row -->
+            <rect class="b2" x="56" y="118" width="80" height="7" rx="3.5"/>
+            <circle class="ink" cx="190" cy="121" r="10"/><text x="190" y="121" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#fff;font-weight:700">1</text>
+            <rect class="b2" x="206" y="118" width="46" height="7" rx="3.5"/>
+            <path d="M262 113 l0 12 M257 113 h10" stroke="#C1672A" stroke-width="2" stroke-linecap="round"/>
+            <circle class="b2" cx="297" cy="121" r="10"/><text x="297" y="121" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#fff;font-weight:700">2</text>
+            <rect class="b1" x="313" y="118" width="50" height="7" rx="3.5"/>
+            <circle class="b2" cx="404" cy="121" r="10"/><text x="404" y="121" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#fff;font-weight:700">3</text>
+            <rect class="b1" x="420" y="118" width="50" height="7" rx="3.5"/>
+            <circle class="b2" cx="511" cy="121" r="10"/><text x="511" y="121" text-anchor="middle" dominant-baseline="central" style="font-size:11px;fill:#fff;font-weight:700">4</text>
+            <rect class="b1" x="527" y="118" width="50" height="7" rx="3.5"/>
+            <!-- rows -->
+            <line class="ln" x1="40" y1="146" x2="600" y2="146"/>
+            <line class="ln" x1="40" y1="190" x2="600" y2="190"/>
+            <line class="ln" x1="40" y1="234" x2="600" y2="234"/>
+            <line class="ln" x1="40" y1="278" x2="600" y2="278"/>
+            <line class="ln" x1="40" y1="322" x2="600" y2="322"/>
+            <rect class="b2" x="56" y="164" width="90" height="7" rx="3.5"/><rect class="b2" x="56" y="208" width="70" height="7" rx="3.5"/>
+            <rect class="b2" x="56" y="252" width="96" height="7" rx="3.5"/><rect class="b2" x="56" y="296" width="80" height="7" rx="3.5"/>
+            <rect class="b2" x="56" y="340" width="64" height="7" rx="3.5"/>
+            <g class="b1">
+              <rect x="186" y="164" width="60" height="7" rx="3.5"/><rect x="293" y="164" width="60" height="7" rx="3.5"/><rect x="400" y="164" width="60" height="7" rx="3.5"/><rect x="507" y="164" width="60" height="7" rx="3.5"/>
+              <rect x="186" y="208" width="48" height="7" rx="3.5"/><rect x="293" y="208" width="52" height="7" rx="3.5"/><rect x="400" y="208" width="44" height="7" rx="3.5"/><rect x="507" y="208" width="56" height="7" rx="3.5"/>
+              <rect x="186" y="252" width="64" height="7" rx="3.5"/><rect x="293" y="252" width="58" height="7" rx="3.5"/><rect x="400" y="252" width="62" height="7" rx="3.5"/><rect x="507" y="252" width="50" height="7" rx="3.5"/>
+              <rect x="186" y="296" width="52" height="7" rx="3.5"/><rect x="293" y="296" width="46" height="7" rx="3.5"/><rect x="400" y="296" width="60" height="7" rx="3.5"/><rect x="507" y="296" width="54" height="7" rx="3.5"/>
+              <rect x="186" y="340" width="58" height="7" rx="3.5"/><rect x="293" y="340" width="62" height="7" rx="3.5"/><rect x="400" y="340" width="48" height="7" rx="3.5"/><rect x="507" y="340" width="60" height="7" rx="3.5"/>
+            </g>
+          </svg>
+      </div>
+      <div class="annotation-list" style="margin-top:0.85rem;">
+        <div class="annotation"><strong>Evaluation mode switching</strong> — compare suppliers on technical or commercial criteria independently</div>
+        <div class="annotation"><strong>Auto-ranked columns</strong> — suppliers ordered by best offer, position updates as responses come in</div>
+        <div class="annotation"><strong>Pin a supplier for focused comparison</strong> — designed for multi-round negotiation</div>
+        <div class="annotation"><strong>Fixed criteria rows aligned across all suppliers</strong> — same structure replaces the manual spreadsheet workaround</div>
+      </div>
+    </div>
+
+    <!-- Screen 4: Status Log -->
+    <div class="screen-block">
+      <div class="screen-label-row">
+        <span class="screen-num">Screen 04</span>
+        <span class="screen-title">Status Log — full activity and approval tracking</span>
+      </div>
+      <p class="screen-desc">The status log gives all stakeholders a single source of truth — every action, every decision, in chronological order.</p>
+      <div class="screen-img-wrap">
+        <svg class="wf" viewBox="0 0 640 400" role="img" aria-label="Wireframe of the status log with a chronological activity timeline, an approvals card, an inline support request tag, a flagged item and a remarks panel.">
+            <rect class="fr" x="0.5" y="0.5" width="639" height="399" rx="12"/>
+            <path class="top" d="M12.5 0.5 h615 a12 12 0 0 1 12 12 v22 h-639 v-22 a12 12 0 0 1 12 -12z"/>
+            <circle class="b2" cx="20" cy="18" r="4"/><circle class="b2" cx="34" cy="18" r="4"/><circle class="b2" cx="48" cy="18" r="4"/>
+            <!-- timeline -->
+            <line class="ln" x1="64" y1="72" x2="64" y2="360"/>
+            <circle class="gr" cx="64" cy="80" r="6"/><rect class="b2" x="84" y="74" width="180" height="8" rx="4"/><rect class="b1" x="84" y="88" width="110" height="6" rx="3"/><rect class="b1" x="340" y="77" width="44" height="6" rx="3"/>
+            <circle class="gr" cx="64" cy="138" r="6"/><rect class="b2" x="84" y="132" width="150" height="8" rx="4"/><rect class="b1" x="84" y="146" width="130" height="6" rx="3"/><rect class="b1" x="340" y="135" width="44" height="6" rx="3"/>
+            <circle class="gr" cx="64" cy="196" r="6"/><rect class="b2" x="84" y="190" width="170" height="8" rx="4"/><rect class="acc-l" x="84" y="203" width="96" height="18" rx="9"/><text class="t-acc" x="132" y="216" text-anchor="middle">SUPPORT</text><rect class="b1" x="340" y="193" width="44" height="6" rx="3"/>
+            <circle class="acc" cx="64" cy="254" r="6"/><rect class="b2" x="84" y="248" width="160" height="8" rx="4"/>
+            <path d="M92 272 l6 -11 l6 11z" fill="#C1672A"/><rect class="b1" x="110" y="265" width="110" height="6" rx="3"/><rect class="b1" x="340" y="251" width="44" height="6" rx="3"/>
+            <circle cx="64" cy="312" r="6" fill="#fff" stroke="#D3CDC2" stroke-width="2"/><rect class="b1" x="84" y="306" width="140" height="8" rx="4"/><rect class="b1" x="84" y="320" width="90" height="6" rx="3"/>
+            <!-- approvals -->
+            <rect class="cd" x="420" y="52" width="180" height="150" rx="10"/>
+            <rect class="b2" x="436" y="68" width="80" height="7" rx="3.5"/>
+            <circle class="b2" cx="448" cy="100" r="10"/><rect class="b1" x="466" y="97" width="70" height="6" rx="3"/><circle class="gr" cx="578" cy="100" r="8"/><path class="chk" d="M574 100 l2.5 2.5 l5 -5"/>
+            <circle class="b2" cx="448" cy="132" r="10"/><rect class="b1" x="466" y="129" width="60" height="6" rx="3"/><circle class="gr" cx="578" cy="132" r="8"/><path class="chk" d="M574 132 l2.5 2.5 l5 -5"/>
+            <circle class="b2" cx="448" cy="164" r="10"/><rect class="b1" x="466" y="161" width="76" height="6" rx="3"/><circle cx="578" cy="164" r="7" fill="#fff" stroke="#C1672A" stroke-width="2"/>
+            <rect class="b1" x="436" y="186" width="148" height="5" rx="2.5"/><rect class="gr" x="436" y="186" width="99" height="5" rx="2.5"/>
+            <!-- remarks -->
+            <rect class="cd" x="420" y="216" width="180" height="154" rx="10"/>
+            <rect class="b2" x="436" y="232" width="60" height="7" rx="3.5"/>
+            <rect class="b1" x="436" y="252" width="148" height="6" rx="3"/><rect class="b1" x="436" y="266" width="120" height="6" rx="3"/>
+            <rect class="b1" x="436" y="288" width="140" height="6" rx="3"/><rect class="b1" x="436" y="302" width="96" height="6" rx="3"/>
+            <rect class="in" x="436" y="330" width="148" height="26" rx="6"/>
+          </svg>
+      </div>
+      <div class="annotation-list" style="margin-top:0.85rem;">
+        <div class="annotation"><strong>Full activity timeline</strong> — every action, by whom, and when, in a single chronological view</div>
+        <div class="annotation"><strong>Live approval progress</strong> — who has reviewed and who is still pending, visible at a glance without chasing anyone</div>
+        <div class="annotation"><strong>Support requests tracked inline</strong> — turnaround time, priority and risk level tied directly to the activity</div>
+        <div class="annotation"><strong>Flagged line items surfaced in context</strong> — reviewers can raise issues without leaving the flow</div>
+        <div class="annotation"><strong>Remarks captured inline</strong> — all feedback tied to the specific RFX, not scattered across emails</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 OUTCOMES -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-outcomes">04 — Outcomes</span>
+    <h2 class="section-heading">What the redesign delivered</h2>
+    <p class="body">The redesign was signed off by enterprise clients and moved into development <strong>without a full revision round</strong> — a meaningful outcome on a live enterprise product with multiple stakeholder groups.</p>
+    <div class="results-grid">
+      <div class="result-card"><div class="result-stat">200+</div><div class="result-label">daily users across 3 roles on the redesigned flow</div></div>
+      <div class="result-card"><div class="result-stat">5 steps</div><div class="result-label">in one linear flow, replacing scattered pages</div></div>
+      <div class="result-card"><div class="result-stat">2</div><div class="result-label">separate steps folded into creation: approvers and documents</div></div>
+      <div class="result-card"><div class="result-stat">1</div><div class="result-label">outside spreadsheet workaround replaced by the comparison sheet</div></div>
+    </div>
+    <p class="outcome-note">I didn't have access to post-launch data, so these outcomes describe the shipped design rather than usage metrics.</p>
+  </div>
+
+  <!-- 05 RESEARCH -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-research">05 — Research</span>
+    <h2 class="section-heading">Grounding decisions in real usage</h2>
+    <p class="body">Research was conducted through observation — not formal interviews. Insights came from operations team sessions walking clients through the workflow, and <strong>product onboarding calls</strong> with new clients. This gave direct visibility into where users hesitated, asked for help, and built workarounds.</p>
+    <p class="body">This is where the core insight came from: the gap was <strong>visibility</strong>, not the number of steps. Findings were validated through <strong>cross-functional reviews</strong> with product, support, and development.</p>
+  </div>
+
+  <!-- 06 DESIGN DECISIONS -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-design-decisions">06 — Design Decisions</span>
+    <h2 class="section-heading">The specific calls made and why</h2>
+    <p class="body">The approach was to reduce cognitive load by surfacing only what each user needed at each moment — restructuring the flow to feel <strong>continuous and role-aware</strong>.</p>
+
+    <div class="decision-cards">
+      <div class="decision-card">
+        <div class="decision-card-header">
+          <div class="decision-title">Progress visibility — persistent stage indicator vs. breadcrumbs</div>
+          <div class="decision-badge">Chosen</div>
+        </div>
+        <div class="decision-row">
+          <div>
+            <div class="decision-col-label">Considered</div>
+            <div class="decision-col-text">Breadcrumb navigation — familiar pattern, low engineering effort, already used elsewhere in the product.</div>
+            <div class="decision-visual"><svg viewBox="0 0 560 120" role="img" aria-label="Breadcrumb bar showing only the current location"><rect x=".5" y=".5" width="559" height="119" rx="8" fill="#fff" stroke="#E6E2DA"/><text x="20" y="30" font-size="12" fill="#8a7f78">Home  ›  Sourcing  ›  <tspan fill="#1a1714" font-weight="500">RFX</tspan></text><rect x="20" y="48" width="520" height="22" rx="5" fill="#E6E2DA"/><rect x="20" y="80" width="320" height="22" rx="5" fill="#E6E2DA"/></svg></div>
+          </div>
+          <div>
+            <div class="decision-col-label">Chose instead</div>
+            <div class="decision-col-text">Persistent 5-step linear indicator locked to the top of every screen — always visible, shows completed and upcoming stages simultaneously.</div>
+            <div class="decision-visual"><svg viewBox="0 0 560 120" role="img" aria-label="Five-step indicator with two steps done, one in progress and two upcoming"><rect x=".5" y=".5" width="559" height="119" rx="8" fill="#fff" stroke="#E6E2DA"/><line x1="60" y1="26" x2="500" y2="26" stroke="#E6E2DA" stroke-width="2"/><line x1="60" y1="26" x2="280" y2="26" stroke="#4A8C4F" stroke-width="2.5"/><circle cx="60" cy="26" r="9" fill="#4A8C4F"/><path d="M56 26l3 3 5-5.5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="170" cy="26" r="9" fill="#4A8C4F"/><path d="M166 26l3 3 5-5.5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="280" cy="26" r="9" fill="#fff" stroke="#C1672A" stroke-width="2.5"/><circle cx="280" cy="26" r="3.5" fill="#C1672A"/><circle cx="390" cy="26" r="9" fill="#E6E2DA"/><circle cx="500" cy="26" r="9" fill="#E6E2DA"/><rect x="20" y="52" width="520" height="22" rx="5" fill="#E6E2DA"/><rect x="20" y="84" width="320" height="22" rx="5" fill="#E6E2DA"/></svg></div>
+          </div>
+        </div>
+        <div class="decision-tradeoff"><span>Trade-off:</span> Higher engineering cost. Accepted because breadcrumbs only show where you are — they don't show what comes next or signal ownership handoff.</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-card-header">
+          <div class="decision-title">Role-specific views — scoped tabs vs. permission-based visibility</div>
+          <div class="decision-badge">Chosen</div>
+        </div>
+        <div class="decision-row">
+          <div>
+            <div class="decision-col-label">Considered</div>
+            <div class="decision-col-text">Permission-based visibility — hide fields based on role in the database. Simpler from a UI perspective, consistent page structure across all users.</div>
+            <div class="decision-visual"><svg viewBox="0 0 560 120" role="img" aria-label="Only the evaluation tab exists; other tabs are hidden"><rect x=".5" y=".5" width="559" height="119" rx="8" fill="#fff" stroke="#E6E2DA"/><text x="20" y="30" font-size="12" font-weight="500" fill="#1a1714">Evaluation form</text><rect x="20" y="37" width="96" height="3" rx="1.5" fill="#C1672A"/><line x1="20" y1="40" x2="540" y2="40" stroke="#E6E2DA" stroke-width="1.5"/><rect x="136" y="16" width="120" height="18" rx="4" fill="none" stroke="#D3CDC2" stroke-dasharray="4 3"/><text x="196" y="29" font-size="11" fill="#8a7f78" text-anchor="middle">3 tabs hidden</text><rect x="20" y="56" width="520" height="22" rx="5" fill="#E6E2DA"/><rect x="20" y="86" width="300" height="22" rx="5" fill="#E6E2DA"/></svg></div>
+          </div>
+          <div>
+            <div class="decision-col-label">Chose instead</div>
+            <div class="decision-col-text">Role-scoped tab structure — evaluators land directly on the Evaluation Form, irrelevant tabs are deprioritised rather than hidden, preserving discoverability.</div>
+            <div class="decision-visual"><svg viewBox="0 0 560 120" role="img" aria-label="Evaluation tab first; other tabs present but faded"><rect x=".5" y=".5" width="559" height="119" rx="8" fill="#fff" stroke="#E6E2DA"/><text x="20" y="30" font-size="12" font-weight="500" fill="#1a1714">Evaluation form</text><rect x="20" y="37" width="96" height="3" rx="1.5" fill="#C1672A"/><line x1="20" y1="40" x2="540" y2="40" stroke="#E6E2DA" stroke-width="1.5"/><g opacity=".5"><rect x="136" y="22" width="52" height="8" rx="4" fill="#D3CDC2"/><rect x="204" y="22" width="52" height="8" rx="4" fill="#D3CDC2"/><rect x="272" y="22" width="52" height="8" rx="4" fill="#D3CDC2"/></g><rect x="20" y="56" width="520" height="22" rx="5" fill="#E6E2DA"/><rect x="20" y="86" width="300" height="22" rx="5" fill="#E6E2DA"/></svg></div>
+          </div>
+        </div>
+        <div class="decision-tradeoff"><span>Trade-off:</span> More complex tab logic. Justified because hard-hiding content created confusion when users needed to cross-reference — soft-deprioritising worked better in testing.</div>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-card-header">
+          <div class="decision-title">Communication — inline contextual messaging vs. external email</div>
+          <div class="decision-badge">Chosen</div>
+        </div>
+        <div class="decision-row">
+          <div>
+            <div class="decision-col-label">Considered</div>
+            <div class="decision-col-text">Continue routing supplier communication through email — familiar to both internal users and external suppliers, no new surface to build or maintain.</div>
+            <div class="decision-visual"><svg viewBox="0 0 560 120" role="img" aria-label="RFX screen with the conversation happening in a separate email outside it"><rect x=".5" y=".5" width="339" height="119" rx="8" fill="#fff" stroke="#E6E2DA"/><rect x="20" y="18" width="110" height="8" rx="4" fill="#D3CDC2"/><rect x="20" y="40" width="300" height="22" rx="5" fill="#E6E2DA"/><rect x="20" y="72" width="200" height="22" rx="5" fill="#E6E2DA"/><path d="M342 60 C 380 60 390 44 430 44" fill="none" stroke="#D3CDC2" stroke-width="1.5" stroke-dasharray="5 4"/><rect x="430" y="24" width="84" height="56" rx="6" fill="#fff" stroke="#D3CDC2" stroke-width="1.5"/><path d="M430 28l42 28 42-28" fill="none" stroke="#D3CDC2" stroke-width="1.5"/><text x="472" y="100" font-size="11" fill="#8a7f78" text-anchor="middle">Email thread</text></svg></div>
+          </div>
+          <div>
+            <div class="decision-col-label">Chose instead</div>
+            <div class="decision-col-text">Inline contextual messaging tied to the RFX — every conversation is tagged with the request it belongs to, with files shared in the thread, so there's no external thread to track.</div>
+            <div class="decision-visual"><svg viewBox="0 0 560 260" role="img" aria-label="Two-pane inbox. Left: conversation list, each tagged with an RFX number. Right: thread tagged with the RFX number, messages from both sides, file attachments and a message box."><rect x=".5" y=".5" width="559" height="259" rx="8" fill="#fff" stroke="#E6E2DA"/><rect x="16" y="14" width="16" height="16" rx="4" fill="#E6E2DA"/><text x="40" y="27" font-size="12" font-weight="500" fill="#1a1714">Inbox</text><line x1="0" y1="42" x2="560" y2="42" stroke="#E6E2DA"/><line x1="186" y1="42" x2="186" y2="259" stroke="#E6E2DA"/><text x="72" y="62" font-size="11" font-weight="500" fill="#1a1714">General</text><rect x="120" y="52" width="18" height="13" rx="3" fill="#1a1714"/><text x="129" y="62" font-size="9" fill="#fff" text-anchor="middle">12</text><rect x="14" y="70" width="158" height="2" rx="1" fill="#1a1714"/><rect x="14" y="80" width="158" height="18" rx="5" fill="#F7F5F0"/><circle cx="30" cy="118" r="10" fill="#D3CDC2"/><rect x="46" y="110" width="50" height="6" rx="3" fill="#D3CDC2"/><rect x="100" y="109" width="40" height="9" rx="3" fill="#FAECE7"/><text x="120" y="116" font-size="7" fill="#C1672A" text-anchor="middle">RFX-0142</text><rect x="46" y="122" width="90" height="5" rx="2.5" fill="#E6E2DA"/><circle cx="162" cy="124" r="5" fill="#4A8C4F"/><rect x="10" y="134" width="166" height="34" rx="6" fill="#F7F5F0"/><circle cx="30" cy="151" r="10" fill="#D3CDC2"/><rect x="46" y="143" width="44" height="6" rx="3" fill="#D3CDC2"/><rect x="94" y="142" width="28" height="9" rx="3" fill="#E6E2DA"/><rect x="46" y="155" width="100" height="5" rx="2.5" fill="#E6E2DA"/><circle cx="30" cy="186" r="10" fill="#D3CDC2"/><rect x="46" y="178" width="44" height="6" rx="3" fill="#D3CDC2"/><rect x="94" y="177" width="28" height="9" rx="3" fill="#E6E2DA"/><rect x="46" y="190" width="100" height="5" rx="2.5" fill="#E6E2DA"/><circle cx="30" cy="220" r="10" fill="#D3CDC2"/><rect x="46" y="212" width="44" height="6" rx="3" fill="#D3CDC2"/><rect x="94" y="211" width="28" height="9" rx="3" fill="#E6E2DA"/><rect x="46" y="224" width="100" height="5" rx="2.5" fill="#E6E2DA"/><rect x="202" y="54" width="80" height="8" rx="4" fill="#D3CDC2"/><rect x="290" y="51" width="56" height="14" rx="4" fill="#FAECE7"/><text x="318" y="61" font-size="9" fill="#C1672A" text-anchor="middle">RFX-0142</text><rect x="468" y="50" width="76" height="16" rx="5" fill="#F7F5F0"/><circle cx="210" cy="90" r="7" fill="#D3CDC2"/><rect x="222" y="78" width="130" height="44" rx="6" fill="#fff" stroke="#E6E2DA"/><rect x="232" y="86" width="40" height="5" rx="2.5" fill="#D3CDC2"/><rect x="232" y="96" width="100" height="5" rx="2.5" fill="#E6E2DA"/><rect x="232" y="106" width="56" height="11" rx="3" fill="#F7F5F0" stroke="#E6E2DA"/><rect x="237" y="109" width="5" height="5" rx="1" fill="#D3CDC2"/><rect x="246" y="110" width="28" height="3" rx="1.5" fill="#D3CDC2"/><circle cx="536" cy="140" r="7" fill="#D3CDC2"/><rect x="394" y="130" width="130" height="34" rx="6" fill="#fff" stroke="#E6E2DA"/><rect x="404" y="138" width="40" height="5" rx="2.5" fill="#D3CDC2"/><rect x="404" y="148" width="104" height="5" rx="2.5" fill="#E6E2DA"/><circle cx="210" cy="182" r="7" fill="#D3CDC2"/><rect x="222" y="172" width="130" height="34" rx="6" fill="#fff" stroke="#E6E2DA"/><rect x="232" y="180" width="40" height="5" rx="2.5" fill="#D3CDC2"/><rect x="232" y="190" width="90" height="5" rx="2.5" fill="#E6E2DA"/><rect x="202" y="224" width="342" height="22" rx="6" fill="#fff" stroke="#E6E2DA"/><rect x="214" y="232" width="6" height="7" rx="2" fill="#D3CDC2"/><rect x="226" y="233" width="70" height="5" rx="2.5" fill="#E6E2DA"/><rect x="524" y="228" width="14" height="14" rx="3" fill="#1a1714"/></svg></div>
+          </div>
+        </div>
+        <div class="decision-tradeoff"><span>Trade-off:</span> Requires suppliers to engage within the platform rather than email. Mitigated by surfacing a clear email notification that links directly to the thread.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 REFLECTION -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-reflection">07 — Reflection</span>
+    <h2 class="section-heading">If I could go back</h2>
+    <div class="reflection" style="margin-top:0;">
+      I would have pushed for direct observation sessions with evaluators and approvers before finalising the role-specific flows. The designs were validated through stakeholder reviews, but seeing real users navigate the new structure would have surfaced edge cases earlier.
+    </div>
+
+    <div class="disclaimer">
+      To respect confidentiality agreements, screens are recreated as simplified wireframes with placeholder content. I'd be happy to walk through the actual screens and detailed decisions during a conversation.
+    </div>
+  </div>
+
+</div>
+</div><!-- end .cs-layout --><!-- end .page -->
+
+<!-- NEXT CASE -->
+<section class="nx-wrap" aria-label="Next case study">
+  <div class="nx-top"><a class="nx-all" href="index.html#work">← All case studies</a><span class="nx-pips" aria-label="Case 1 of 3">Case 1 of 3 &nbsp;<i class="on"></i><i class=""></i><i class=""></i></span></div>
+  <a class="nx" href="case-study-2.html">
+    <div>
+      <p class="nx-label"><span class="nx-num">02</span>Next case study</p>
+      <p class="nx-title">One Design Language for an Enterprise Procurement Platform</p>
+      <ul class="nx-facts"><li>Lead Designer</li><li>Design system</li><li>6 min read</li></ul>
+    </div>
+    <span class="nx-go">View <b aria-hidden="true">→</b></span>
+  </a>
+</section>
+
+
+
+<!-- FOOTER -->
+<div class="hk-ft" role="contentinfo">
+  <div class="hk-ft-in">
+    <div>
+      <p class="hk-status"><i aria-hidden="true"></i>Open to hybrid / remote roles</p>
+      <p class="hk-ft-h">Got a workflow that feels hard? <span>Let's make it obvious.</span></p>
+    </div>
+    <a class="hk-btn" href="harshitha-kalidindi-resume.pdf" target="_blank" rel="noopener">Resume <span aria-hidden="true">↗</span></a>
+  </div>
+  <div class="hk-ft-bottom">Designed and built by Harshitha with Figma, Claude, GitHub and Vercel</div>
+</div>
+
+
+<script>
+/* Hero: moving pixel grid, purple to dark pink */
+(function(){
+  var wrap=document.getElementById('heroWrap'), cv=document.getElementById('heroGrid');
+  if(!wrap||!cv||!cv.getContext)return;
+  var ctx=cv.getContext('2d'), CELL=12, SPEED=0.24, SPAWN=4, STEPS=[.75,.55,.35,.18];
+  var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W=0,H=0,grad,off=0,lit=[],last=0,frame=0,visible=true,raf=null;
+  function size(){var dpr=Math.min(2,window.devicePixelRatio||1);W=wrap.clientWidth;H=wrap.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+    grad=ctx.createLinearGradient(0,0,W,H);grad.addColorStop(0,'#7F77DD');grad.addColorStop(.35,'#534AB7');grad.addColorStop(.7,'#993556');grad.addColorStop(1,'#D4537E');}
+  function draw(){ctx.clearRect(0,0,W,H);var o=off%CELL;ctx.fillStyle=grad;
+    lit.forEach(function(p){if(p.s<0)return;ctx.globalAlpha=STEPS[Math.min(p.s,STEPS.length-1)]*.55;ctx.fillRect(Math.floor(p.gx*CELL+off)+1,Math.floor(p.gy*CELL+off)+1,CELL-1,CELL-1);});
+    ctx.globalAlpha=.32;ctx.beginPath();
+    for(var x=o-CELL;x<=W;x+=CELL)ctx.rect(Math.floor(x),0,1,H);
+    for(var y=o-CELL;y<=H;y+=CELL)ctx.rect(0,Math.floor(y),W,1);
+    ctx.fill();ctx.globalAlpha=1;}
+  function spawn(){for(var i=0;i<SPAWN;i++)lit.push({gx:Math.floor((Math.random()*W-off)/CELL),gy:Math.floor((Math.random()*H-off)/CELL),s:-Math.floor(Math.random()*3)});}
+  function tick(t){raf=null;if(!visible)return;raf=requestAnimationFrame(tick);if(t-last<33)return;last=t;frame++;off+=SPEED;
+    if(frame%3===0){lit.forEach(function(p){p.s++;});lit=lit.filter(function(p){return p.s<STEPS.length;});spawn();}
+    draw();}
+  function start(){if(!raf&&!RM)raf=requestAnimationFrame(tick);}
+  size();
+  if(RM){for(var i=0;i<12;i++)spawn();lit.forEach(function(p){p.s=1;});draw();}
+  else start();
+  if('IntersectionObserver' in window){new IntersectionObserver(function(e){visible=e[0].isIntersecting;if(visible)start();}).observe(wrap);}
+  window.addEventListener('resize',function(){size();draw();});
+})();
+</script>
+
+<script>
+/* side contents: highlight the section you're reading */
+(function(){
+  var items=[].slice.call(document.querySelectorAll('.cs-toc a.cs-item')); if(!items.length) return;
+  var targets=items.map(function(a){return document.getElementById(a.getAttribute('href').slice(1));});
+  var bar=document.querySelector('.cs-toc');
+  function update(){
+    var line=window.innerHeight*0.35, cur=0;
+    targets.forEach(function(t,i){ if(t && t.getBoundingClientRect().top<=line) cur=i; });
+    items.forEach(function(a,i){ var on=i===cur; if(a.classList.contains('on')!==on){ a.classList.toggle('on',on);
+      if(on && bar && bar.scrollWidth>bar.clientWidth){ bar.scrollTo({left:a.offsetLeft-16,behavior:'smooth'}); } } });
+  }
+  var raf=null; window.addEventListener('scroll',function(){ if(!raf) raf=requestAnimationFrame(function(){raf=null;update();}); },{passive:true});
+  window.addEventListener('resize',update); update();
+})();
+</script>
+<script>
+/* ===== Interactive wireframes (case study 01) ===== */
+(function(){
+  var NS='http://www.w3.org/2000/svg';
+  var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var GREEN=getComputedStyle(document.documentElement).getPropertyValue('--green-mid').trim()||'#3B7A4A';
+  function el(tag,attrs,parent,before){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent){before?parent.insertBefore(e,before):parent.appendChild(e);}return e;}
+  function tween(e,attr,to,dur,done){
+    var from=parseFloat(e.getAttribute(attr))||0; if(RM||!dur){e.setAttribute(attr,to);done&&done();return;}
+    var t0=performance.now();(function f(t){var p=Math.min(1,(t-t0)/dur),k=1-Math.pow(1-p,3);e.setAttribute(attr,from+(to-from)*k);if(p<1)requestAnimationFrame(f);else done&&done();})(t0);
+  }
+  function q(svg,sel){return [].slice.call(svg.querySelectorAll(sel));}
+  function onVisible(node,cb){ if(!('IntersectionObserver' in window)){cb(true);return;}
+    new IntersectionObserver(function(es){es.forEach(function(e){cb(e.isIntersecting);});},{threshold:.35}).observe(node); }
+  /* "typing" bars inside input fields */
+  function typeInto(svg,inputs,widths){
+    return inputs.map(function(r,i){var x=+r.getAttribute('x'),y=+r.getAttribute('y'),h=+r.getAttribute('height');
+      var bar=el('rect',{class:'b2 wf-typed',x:x+10,y:y+h/2-3,width:0,height:6,rx:3},r.parentNode,r.nextSibling);
+      bar._w=widths[i%widths.length]*(+r.getAttribute('width')-20);return bar;});
+  }
+  function retype(bars,stagger){bars.forEach(function(b,i){b.setAttribute('width',0);setTimeout(function(){tween(b,'width',b._w*(.75+Math.random()*.25),520);},(stagger||140)*i);});}
+
+  /* ---------- Screen 01: RFX creation ---------- */
+  function s1(svg){
+    // replace the static stepper with a live one
+    q(svg,'line[y1="66"], circle[cy="66"], path.chk, rect[y="84"]').forEach(function(n){ if(n.getAttribute('d')&&n.getAttribute('d').indexOf(' 66')<0) return; n.remove(); });
+    var X=[110,215,320,425,530], top=svg.querySelector('.top');
+    var g=el('g',{class:'wf-stepper'},svg,top.nextSibling.nextSibling);
+    el('line',{class:'ln',x1:110,y1:66,x2:530,y2:66},g);
+    var prog=el('line',{class:'gr-s',x1:110,y1:66,x2:110,y2:66},g);
+    var nodes=X.map(function(x){var n=el('g',{},g);
+      return {done:el('circle',{class:'gr',cx:x,cy:66,r:10,opacity:0},n), chk:el('path',{class:'chk',d:'M'+(x-4.5)+' 66 l3 3 l6 -6.5',opacity:0},n),
+        ring:el('circle',{cx:x,cy:66,r:10,fill:'#fff',stroke:'#C1672A','stroke-width':2.5,opacity:0},n), dot:el('circle',{class:'acc wf-pulse',cx:x,cy:66,r:4,opacity:0},n),
+        idle:el('circle',{class:'b1',cx:x,cy:66,r:10},n), label:el('rect',{class:'b1',x:x-20,y:84,width:40,height:5,rx:2.5},n)};});
+    var step=0;
+    function draw(s){step=s;tween(prog,'x2',X[Math.max(0,s)],420);
+      nodes.forEach(function(n,i){var st=i<s?'done':i===s?'cur':'idle';
+        [['done','done'],['chk','done'],['ring','cur'],['dot','cur'],['idle','idle']].forEach(function(pr){n[pr[0]].setAttribute('opacity',1);n[pr[0]].style.display=st===pr[1]?'':'none';});n.label.setAttribute('class',st==='cur'?'acc-l':'b1');});}
+    draw(0);
+    // fields type themselves
+    var inputs=q(svg,'rect.in').filter(function(r){return +r.getAttribute('y')<300;});
+    var bars=typeInto(svg,inputs,[.62,.8,.7,.85]);
+    // saved chip
+    var savedTxt=svg.querySelector('text.t-gr'), savedDot=q(svg,'circle.gr').filter(function(c){return c.getAttribute('cy')==='354';})[0], chip=svg.querySelector('rect.gr-l');
+    function saving(){ if(!savedTxt) return; savedTxt.textContent='SAVING'; savedTxt.setAttribute('class','t-acc'); chip.setAttribute('class','acc-l'); savedDot.setAttribute('class','acc wf-pulse');
+      setTimeout(function(){savedTxt.textContent='SAVED';savedTxt.setAttribute('class','t-gr');chip.setAttribute('class','gr-l');savedDot.setAttribute('class','gr');},700);}
+    // next / back buttons
+    var next=q(svg,'rect.acc').filter(function(r){return r.getAttribute('y')==='340';})[0], back=q(svg,'rect.b1').filter(function(r){return r.getAttribute('y')==='340';})[0];
+    var nt=el('text',{x:560,y:358,'text-anchor':'middle',class:'wf-btn-t',style:'font-size:11px;fill:#fff;font-weight:700;letter-spacing:.06em;pointer-events:none'},svg);nt.textContent='NEXT';
+    var bt=el('text',{x:475,y:358,'text-anchor':'middle',class:'t-sm',style:'pointer-events:none'},svg);bt.textContent='BACK';
+    [next,back].forEach(function(b){b.classList.add('wf-click');});
+    var last=0;
+    function advance(){draw(step>=4?0:step+1);retype(bars);saving();}
+    next.addEventListener('click',function(){last=Date.now();advance();});
+    back.addEventListener('click',function(){last=Date.now();draw(Math.max(0,step-1));retype(bars);saving();});
+    // approvers: + adds a person
+    var plus=q(svg,'circle.dash').filter(function(c){return c.getAttribute('cx')==='504';})[0], plusMark=plus&&plus.nextElementSibling, added=false;
+    if(plus){plus.classList.add('wf-click');plus.addEventListener('click',function(){added=!added;
+      plus.setAttribute('class',added?'b2 wf-click wf-pop':'dash wf-click');if(plusMark)plusMark.setAttribute('opacity',added?0:1);});}
+    // upload arrow nudges on hover
+    var arrow=q(svg,'path').filter(function(p){return (p.getAttribute('d')||'').indexOf('M510 262')===0;})[0]; if(arrow)arrow.classList.add('wf-arrow');
+    var started=false, timer=null;
+    onVisible(svg,function(v){
+      if(v&&!started){started=true; retype(bars,180); if(RM){draw(2);return;}
+        setTimeout(function(){if(!last){draw(1);saving();}},700); setTimeout(function(){if(!last){draw(2);saving();}},1500);}
+      if(v&&!timer&&!RM){timer=setInterval(function(){ if(Date.now()-last<6000) return; advance();
+        if(plus&&step===3){plus.dispatchEvent(new Event('click'));} },5000);}
+      if(!v&&timer){clearInterval(timer);timer=null;}
+    });
+  }
+
+  /* ---------- Screen 02: Evaluator view ---------- */
+  function s2(svg){
+    var pills=q(svg,'rect').filter(function(r){return r.getAttribute('y')==='164'&&r.getAttribute('height')==='22';});
+    var labels=q(svg,'text').filter(function(t){return /^R[123]$/.test(t.textContent.trim());});
+    var cur=0, last=0;
+    var inputs=q(svg,'rect.in').filter(function(r){return r.getAttribute('x')==='250';});
+    var bars=typeInto(svg,inputs,[.55,.7,.4,.62]);
+    function setRound(i){cur=i;pills.forEach(function(p,k){p.setAttribute('class',(k===i?'acc-l':'cd')+' wf-click');});
+      labels.forEach(function(t,k){t.setAttribute('class',k===i?'t-acc':'t-sm');}); retype(bars,110);
+      q(svg,'rect.b2').filter(function(r){return r.getAttribute('y')==='66';}).forEach(function(r){tween(r,'width',30+Math.random()*34,400);});}
+    pills.forEach(function(p,k){p.classList.add('wf-click');p.addEventListener('click',function(){last=Date.now();setRound(k);});});
+    labels.forEach(function(t){t.style.pointerEvents='none';});
+    // stage progress bar fills
+    var stage=q(svg,'rect.gr').filter(function(r){return r.getAttribute('y')==='240';})[0]; if(stage) stage.setAttribute('width',0);
+    // messages arrive
+    var msgs=q(svg,'rect').filter(function(r){return (r.getAttribute('y')==='284'||r.getAttribute('y')==='308')&&+r.getAttribute('x')>440;});
+    msgs.forEach(function(m){m.setAttribute('opacity',0);});
+    var dots=el('g',{opacity:0},svg); [0,1,2].forEach(function(i){el('circle',{class:'b2 wf-typing',cx:466+i*9,cy:293,r:2.6,style:'animation-delay:'+(i*.15)+'s'},dots);});
+    function convo(){ if(RM){msgs.forEach(function(m){m.setAttribute('opacity',1);});return;}
+      msgs.forEach(function(m){m.setAttribute('opacity',0);});
+      dots.setAttribute('opacity',1);
+      setTimeout(function(){dots.setAttribute('opacity',0);msgs[0].setAttribute('opacity',1);msgs[0].classList.add('wf-in');},900);
+      setTimeout(function(){msgs[1].setAttribute('opacity',1);msgs[1].classList.add('wf-in');},1700);}
+    var timer=null, started=false;
+    onVisible(svg,function(v){
+      if(v&&!started){started=true;retype(bars);if(stage)tween(stage,'width',84,1200);convo();}
+      if(v&&!timer&&!RM){timer=setInterval(function(){if(Date.now()-last<6000)return;setRound((cur+1)%3);convo();},5000);}
+      if(!v&&timer){clearInterval(timer);timer=null;}
+    });
+  }
+
+  /* ---------- Screen 03: Comparison sheet ---------- */
+  function s3(svg){
+    var pillBg=q(svg,'rect.ink').filter(function(r){return r.getAttribute('y')==='51';})[0];
+    var txt=q(svg,'text').filter(function(t){return /TECHNICAL|COMMERCIAL/.test(t.textContent);});
+    var track=q(svg,'rect.cd').filter(function(r){return r.getAttribute('y')==='48';})[0];
+    var mode=0;
+    var vals=q(svg,'g.b1 rect');
+    vals.forEach(function(v){v._base=+v.getAttribute('width');});
+    function setMode(m){mode=m;tween(pillBg,'x',m?150:43,320);
+      txt[0].setAttribute('style',m?'':'font-size:11px;fill:#F7F5F0;font-weight:700;letter-spacing:.04em');txt[0].setAttribute('class',m?'t-sm':'');
+      txt[1].setAttribute('style',m?'font-size:11px;fill:#F7F5F0;font-weight:700;letter-spacing:.04em':'');txt[1].setAttribute('class',m?'':'t-sm');
+      vals.forEach(function(v,i){setTimeout(function(){tween(v,'width',m?Math.max(28,Math.min(66,v._base*(.6+Math.random()*.7))):v._base,380);},i*18);});}
+    var last=0;
+    [track,pillBg].forEach(function(n){n.classList.add('wf-click');n.addEventListener('click',function(e){last=Date.now();var pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;var p=pt.matrixTransform(svg.getScreenCTM().inverse());setMode(p.x>150?1:0);});});
+    txt.forEach(function(t){t.style.pointerEvents='none';});
+    // pin any supplier column
+    var pinFill=q(svg,'rect.acc-l').filter(function(r){return r.getAttribute('x')==='170';})[0];
+    var pinLine=q(svg,'rect').filter(function(r){return r.getAttribute('x')==='170'&&r.getAttribute('fill')==='none';})[0];
+    var pinIcon=q(svg,'path').filter(function(p){return (p.getAttribute('d')||'').indexOf('M262 113')===0;})[0];
+    var pinG=el('g',{class:'wf-pin'},svg,pinFill); [pinFill,pinLine].forEach(function(n){pinG.appendChild(n);});
+    var iconG=el('g',{class:'wf-pin'},svg); if(pinIcon) iconG.appendChild(pinIcon);
+    var cols=[170,277,384,491], pinAt=0;
+    function pin(k){pinAt=k;var dx=cols[k]-170;pinG.style.transform='translateX('+dx+'px)';iconG.style.transform='translateX('+dx+'px)';}
+    cols.forEach(function(x,k){var hit=el('rect',{x:x,y:96,width:107,height:274,fill:'transparent',class:'wf-click'},svg);
+      hit.addEventListener('click',function(){last=Date.now();pin(k);});});
+    var started=false, timer=null, tick=0;
+    onVisible(svg,function(v){
+      if(v&&!started&&!RM){started=true;setTimeout(function(){if(!last)setMode(1);},1200);}
+      if(v&&!timer&&!RM){timer=setInterval(function(){ if(Date.now()-last<6000) return; tick++;
+        if(tick%2){pin((pinAt+1)%cols.length);} else {setMode(mode?0:1);} },5000);}
+      if(!v&&timer){clearInterval(timer);timer=null;}
+    });
+  }
+
+  /* ---------- Screen 04: Status log ---------- */
+  function s4(svg){
+    var spine=q(svg,'line.ln').filter(function(l){return l.getAttribute('x1')==='64';})[0];
+    var rows=[80,138,196,254,312].map(function(cy){return q(svg,'*').filter(function(n){
+      var y=+(n.getAttribute('cy')||n.getAttribute('y')||-1);return n.tagName!=='g'&&+(n.getAttribute('x')||n.getAttribute('cx')||0)<400&&y>=cy-8&&y<cy+42&&n!==spine;});});
+    var flag=q(svg,'path').filter(function(p){return (p.getAttribute('d')||'').indexOf('M92 272')===0;})[0]; if(flag) flag.classList.add('wf-flag');
+    var pend=q(svg,'circle').filter(function(c){return c.getAttribute('cx')==='578'&&c.getAttribute('cy')==='164';})[0];
+    var okG=el('g',{opacity:0},svg); el('circle',{class:'gr',cx:578,cy:164,r:8},okG); el('path',{class:'chk',d:'M574 164 l2.5 2.5 l5 -5'},okG);
+    var bar=q(svg,'rect.gr').filter(function(r){return r.getAttribute('y')==='186';})[0];
+    // caret in remarks
+    el('rect',{class:'acc wf-caret',x:446,y:336,width:2,height:14},svg);
+    function play(){
+      if(RM)return;
+      var len=288; spine.setAttribute('stroke-dasharray',len); spine.setAttribute('stroke-dashoffset',len); spine.style.transition='none';
+      requestAnimationFrame(function(){spine.style.transition='stroke-dashoffset 1.4s ease';spine.setAttribute('stroke-dashoffset',0);});
+      rows.forEach(function(r,i){r.forEach(function(n){n.style.transition='none';n.style.opacity=0;n.style.transform='translateX(-6px)';});
+        setTimeout(function(){r.forEach(function(n){n.style.transition='opacity .35s ease, transform .35s ease';n.style.opacity=1;n.style.transform='none';});},250+i*260);});
+      okG.setAttribute('opacity',0); pend.setAttribute('opacity',1); bar.setAttribute('width',99);
+      setTimeout(function(){okG.setAttribute('opacity',1);okG.classList.add('wf-pop');pend.setAttribute('opacity',0);tween(bar,'width',148,600);},1900);
+    }
+    var timer=null;
+    onVisible(svg,function(v){ if(v&&!timer){play();timer=setInterval(play,5000);} if(!v&&timer){clearInterval(timer);timer=null;} });
+  }
+
+  /* ---------- numbered hotspots linked to the annotations ---------- */
+  var HOTS=[
+    [[84,44,472,50],[40,110,360,192],[420,110,180,84],[420,208,180,94],[34,334,120,40]],
+    [[40,52,560,54],[36,160,180,30],[436,164,164,94],[36,122,388,30,1],[436,270,164,100]],
+    [[40,48,220,30],[170,104,430,34],[170,96,107,274],[40,146,560,214]],
+    [[48,66,346,272],[420,52,180,150],[80,200,104,24],[86,256,140,22],[420,216,180,154]]
+  ];
+  var SCREENS=[s1,s2,s3,s4];
+  [].slice.call(document.querySelectorAll('.screen-block')).forEach(function(block,bi){
+    var svg=block.querySelector('svg.wf'); if(!svg||!HOTS[bi]) return;
+    try{SCREENS[bi](svg);}catch(err){}
+    var ann=[].slice.call(block.querySelectorAll('.annotation'));
+    var layer=el('g',{class:'wf-layer'},svg);
+    var mask=el('path',{class:'wf-mask','fill-rule':'evenodd',d:'M0 0H640V400H0Z'},layer);
+    var ring=el('rect',{class:'wf-ring',rx:10,x:0,y:0,width:0,height:0},layer);
+    var badges=HOTS[bi].map(function(r,i){var g=el('g',{class:'wf-badge'},layer);
+      var bx=r[4]?r[0]+r[2]-4:r[0]+4;el('circle',{cx:bx,cy:r[1]+4,r:10},g);var t=el('text',{x:bx,y:r[1]+4.5,'text-anchor':'middle','dominant-baseline':'central'},g);t.textContent=i+1;
+      g.addEventListener('mouseenter',function(){focus(i);});g.addEventListener('mouseleave',function(){focus(-1);});
+      g.addEventListener('click',function(){focus(i);});return g;});
+    ann.forEach(function(a,i){ if(i>=HOTS[bi].length) return;
+      var n=document.createElement('span');n.className='wf-num';n.textContent=i+1;a.insertBefore(n,a.firstChild);
+      a.tabIndex=0;
+      a.addEventListener('mouseenter',function(){focus(i);});a.addEventListener('mouseleave',function(){focus(-1);});
+      a.addEventListener('focus',function(){focus(i);});a.addEventListener('blur',function(){focus(-1);});});
+    function focus(i){
+      if(i<0){layer.classList.remove('on');ann.forEach(function(a){a.classList.remove('on');});badges.forEach(function(b){b.classList.remove('on');});return;}
+      var r=HOTS[bi][i];
+      mask.setAttribute('d','M0 0H640V400H0Z M'+r[0]+' '+r[1]+'v'+r[3]+'h'+r[2]+'v'+(-r[3])+'Z');
+      ['x','y','width','height'].forEach(function(k,j){ring.setAttribute(k,r[j]);});
+      layer.classList.add('on');ann.forEach(function(a,k){a.classList.toggle('on',k===i);});badges.forEach(function(b,k){b.classList.toggle('on',k===i);});
+    }
+    block.classList.add('wf-live');
+  });
+})();
+</script>
+</body>
+</html>

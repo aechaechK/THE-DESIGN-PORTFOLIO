@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System — Harshitha Kalidindi</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500&f[]=cabinet-grotesk@400,500,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #F7F5F0;
+    --cream-mid: #EDEAE3;
+    --ink: #1a1714;
+    --ink-muted: #5c5652;
+    --ink-faint: #8a7f78;
+    --terracotta: #C1672A;
+    --terracotta-light: #FAECE7;
+    --border: rgba(0,0,0,0.07);
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Satoshi', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  /* NAV */
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 0.5px solid rgba(255,255,255,0.07);
+    background: #1a1714;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-left { display: flex; align-items: center; gap: 0.75rem; }
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    flex-shrink: 0;
+  }
+  .nav-eyebrow {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 15px;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: rgba(255,255,255,0.85); }
+
+  /* PAGE */
+  .page { max-width: 800px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* HERO */
+  .hero {
+    background: #1a1714;
+    padding: 5rem 1.5rem 4.5rem;
+    text-align: center;
+  }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 1.75rem;
+    display: block;
+  }
+  .hero-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(38px, 6vw, 70px);
+    font-weight: 500;
+    line-height: 1.1;
+    color: #F7F5F0;
+    max-width: 820px;
+    margin: 0 auto 1.25rem;
+    letter-spacing: -0.02em;
+  }
+  .hero-module {
+    font-size: 16px;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.04em;
+  }
+
+  /* META STRIP */
+  .meta-strip {
+    background: #1a1714;
+    border-top: 0.5px solid rgba(255,255,255,0.08);
+    padding: 2rem 1.5rem 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 5rem;
+  }
+  .meta-strip-item { text-align: left; }
+  .meta-strip-label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+  .meta-strip-value {
+    font-size: 17px;
+    color: rgba(255,255,255,0.75);
+    font-weight: 400;
+  }
+
+  /* NDA NOTICE */
+  .nda-notice {
+    background: var(--cream-mid);
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    font-size: 15px;
+    color: var(--ink-faint);
+    font-style: italic;
+    line-height: 1.6;
+    margin: 1.5rem 0 0;
+    text-align: center;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 3.5rem 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .section-num {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    display: block;
+  }
+  .section-heading {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 1.25rem;
+  }
+  .body {
+    font-size: 17px;
+    color: var(--ink-muted);
+    line-height: 1.85;
+    margin-bottom: 1rem;
+  }
+  .body strong { color: var(--ink); font-weight: 500; }
+  .body:last-child { margin-bottom: 0; }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--terracotta-light);
+    border-left: 3px solid var(--terracotta);
+    border-radius: 0 10px 10px 0;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .callout-label {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+  }
+  .callout-text {
+    font-size: 17px;
+    color: var(--ink);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  /* PRINCIPLES GRID */
+  .principles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.75rem;
+  }
+  .principle-card {
+    background: #fff;
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+  .principle-num {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .principle-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+  .principle-body {
+    font-size: 15px;
+    color: var(--ink-muted);
+    line-height: 1.65;
+  }
+
+  /* FOUNDATION BLOCKS */
+  .foundation-block {
+    margin-bottom: 2.5rem;
+  }
+  .foundation-block:last-child { margin-bottom: 0; }
+  .foundation-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--ink-faint);
+  }
+
+  /* COMPONENT LIST */
+  .component-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 1.5rem;
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .component-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .component-row:last-child { border-bottom: none; }
+  .component-name {
+    padding: 1rem 1.25rem;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    border-right: 0.5px solid var(--border);
+    background: var(--cream);
+    display: flex;
+    align-items: flex-start;
+    padding-top: 1.1rem;
+  }
+  .component-desc {
+    padding: 1rem 1.25rem;
+    font-size: 15px;
+    color: var(--ink-muted);
+    line-height: 1.65;
+  }
+
+  /* IMPACT LIST */
+  .impact-list {
+    list-style: none;
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .impact-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 17px;
+    color: var(--ink-muted);
+    line-height: 1.65;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .impact-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .impact-list li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    flex-shrink: 0;
+    margin-top: 8px;
+    opacity: 0.6;
+  }
+  .impact-list li strong { color: var(--ink); font-weight: 500; }
+
+  /* REFLECTION */
+  .reflection {
+    background: var(--cream-mid);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    font-size: 16px;
+    color: var(--ink-muted);
+    line-height: 1.75;
+  }
+  .reflection strong { color: var(--ink); font-weight: 500; }
+
+  /* DISCLAIMER */
+  .disclaimer {
+    margin-top: 2.5rem;
+    padding-top: 2rem;
+    border-top: 0.5px solid var(--border);
+    font-size: 14px;
+    color: var(--ink-faint);
+    font-style: italic;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  /* NEXT / FOOTER */
+  .next-case {
+    text-align: center;
+    padding: 3.5rem 1.5rem;
+    background: var(--ink);
+  }
+  .next-label {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6b6460;
+    margin-bottom: 0.75rem;
+  }
+  .next-title {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: #F7F5F0;
+  }
+  .next-title a { color: inherit; text-decoration: none; }
+  .next-title a:hover { opacity: 0.7; }
+
+  footer {
+    border-top: 0.5px solid var(--border);
+    padding: 1.5rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1060px;
+    margin: 0 auto;
+  }
+  .footer-name {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: 16px;
+    color: var(--ink-faint);
+  }
+  .footer-links { display: flex; gap: 1.75rem; list-style: none; }
+  .footer-links a {
+    font-size: 15px;
+    color: var(--ink-faint);
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: var(--ink); }
+
+  .thank-you {
+    text-align: center;
+    padding: 1.5rem 1.5rem 1rem;
+    overflow: hidden;
+  }
+  .thank-you-text {
+    font-family: 'Cabinet Grotesk', sans-serif;
+    font-size: clamp(62px, 14vw, 162px);
+    font-weight: 500;
+    color: var(--ink);
+    opacity: 0.05;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    user-select: none;
+  }
+
+  @media (max-width: 700px) {
+    nav { padding: 0.75rem 1rem; }
+    .hero { padding: 3.5rem 1rem 3rem; }
+    .hero-title { font-size: clamp(26px, 7vw, 42px); }
+    .hero-sub { font-size: 15px; }
+    .meta-strip { flex-direction: column; gap: 1.5rem; padding: 1.5rem 1rem; align-items: flex-start; }
+    .page { padding: 0 1rem; }
+    .section { padding: 2rem 0; }
+    .section-heading { font-size: 22px; }
+    .body { font-size: 15px; }
+
+    /* Principles grid — stack to single column */
+    .principles-grid { grid-template-columns: 1fr; }
+    .principle-card { padding: 1.1rem; }
+    .principle-title { font-size: 16px; }
+    .principle-body { font-size: 14px; }
+
+    /* Component list — stack name and detail */
+    .component-row { grid-template-columns: 1fr; }
+    .component-name { padding: 0.75rem 1rem 0.25rem; font-size: 14px; }
+    .component-detail { padding: 0.25rem 1rem 0.75rem; font-size: 13px; }
+
+    .callout { padding: 1rem 1.1rem; font-size: 14px; }
+    .reflection { font-size: 14px; padding: 1rem; }
+    .next-case { padding: 2.5rem 1rem; }
+    footer { padding: 1.25rem 1rem; flex-direction: column; gap: 1rem; text-align: center; }
+    .thank-you { padding: 1rem; }
+  }
+  /* HERO — moving pixel grid background */
+  .hero-wrap { position: relative; background: #1a1714; overflow: hidden; }
+  .hero-grid { position: absolute; inset: 0; width: 100%; height: 100%; display: block; pointer-events: none; }
+  .hero-fade { position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 48% 52% at 50% 40%, #1a1714 35%, rgba(26,23,20,.65) 65%, rgba(26,23,20,0) 100%),
+                linear-gradient(to top, rgba(26,23,20,.85) 0%, rgba(26,23,20,.4) 18%, rgba(26,23,20,0) 35%); }
+  .hero-wrap .hero, .hero-wrap .meta-strip { position: relative; z-index: 1; background: transparent; }
+  .hero-wrap .meta-strip { border-top: none; }
+
+  /* VISUALS (NDA-safe recreations) */
+  .ds-visual { background: var(--cream); border-radius: 12px; padding: 10px; margin-top: 1.25rem; }
+  .ds-visual svg { display: block; width: 100%; height: auto; font-family: 'Satoshi', sans-serif; }
+  .ds-t-lbl { font-size: 11px; font-weight: 500; letter-spacing: .1em; fill: var(--ink-faint); }
+  .ds-t-chip { font-size: 12px; font-weight: 500; fill: var(--ink); }
+  .ds-t-big { font-size: 15px; font-weight: 500; fill: var(--ink); }
+  .ds-t-note { font-size: 11px; fill: var(--ink-faint); font-style: italic; }
+  .ds-caption { font-size: 13px; color: var(--ink-faint); font-style: italic; margin-top: .5rem; }
+
+  /* OUTCOMES */
+  .results-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1.75rem 0 .5rem; }
+  .result-card { background: #fff; border: 0.5px solid var(--border); border-radius: 10px; padding: 1.25rem; }
+  .result-stat { font-family: 'Cabinet Grotesk', sans-serif; font-size: 32px; font-weight: 400; color: var(--ink); line-height: 1; margin-bottom: .5rem; }
+  .result-label { font-size: 14px; color: var(--ink-muted); line-height: 1.4; }
+
+  /* COMPONENTS — in depth + grid */
+  .comp-deep { margin-top: 2.25rem; }
+  .comp-deep-head { display: flex; align-items: center; gap: .75rem; margin-bottom: .5rem; }
+  .comp-num { font-size: 12px; letter-spacing: .1em; color: var(--ink-faint); font-weight: 500; background: var(--cream-mid); padding: 3px 10px; border-radius: 100px; }
+  .comp-title { font-size: 17px; font-weight: 500; color: var(--ink); }
+  .comp-desc { font-size: 15px; color: var(--ink-muted); line-height: 1.6; }
+  .comp-grid-label { margin-top: 2.75rem; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); font-weight: 500; }
+  .comp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; margin-top: .75rem; }
+  .comp-tile { background: #fff; border: 0.5px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; }
+  .comp-tile-name { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: .25rem; }
+  .comp-tile-desc { font-size: 14px; color: var(--ink-muted); line-height: 1.5; }
+  @media (max-width: 700px) {
+    .results-grid { grid-template-columns: 1fr 1fr; }
+    .comp-grid { grid-template-columns: 1fr; }
+    .ds-visual { padding: 6px; }
+  }
+
+  /* ===== shared header + footer (matches the homepage) ===== */
+  .hk-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 500; display: flex; justify-content: center; padding: 1.1rem 1.5rem; pointer-events: none; }
+  .hk-pill { pointer-events: auto; display: flex; align-items: center; background: #1a1714; border-radius: 100px; overflow-x: auto; scrollbar-width: none; max-width: calc(100vw - 20px); box-shadow: 0 0 0 1px rgba(247,245,240,.14); }
+  .hk-pill::-webkit-scrollbar { display: none; }
+  .hk-pill a { position: relative; font-family: 'Satoshi', sans-serif; font-size: 15px; color: rgba(255,255,255,.75); text-decoration: none; padding: 8px 22px; white-space: nowrap; transition: color .2s, background .2s; }
+  .hk-pill a:hover { color: #fff; background: rgba(255,255,255,.08); }
+  .hk-pill a.hk-here { color: #fff; }
+  .hk-pill a.hk-here::before { content: ''; position: absolute; left: 9px; top: 50%; width: 6px; height: 6px; margin-top: -3px; background: #F2C05C; }
+  .hk-home { display: flex !important; align-items: center; padding: 8px 16px 8px 20px !important; }
+  .hk-home svg { width: 22px; height: 18px; display: block; }
+  .hk-div { width: 1px; height: 16px; background: rgba(255,255,255,.15); flex: none; }
+  .hero-wrap { padding-top: 64px; }
+  .hk-ft { max-width: 1072px; margin: 3rem auto 16px; width: calc(100% - 32px); border-radius: 20px; overflow: hidden; background-color: #1a1714; color: #F7F5F0;
+    background-image: linear-gradient(rgba(247,245,240,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(247,245,240,.06) 1px, transparent 1px); background-size: 16px 16px; }
+  .hk-ft-in { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding: 1.4rem 1.75rem; }
+  .hk-status { display: inline-flex; align-items: center; gap: 9px; font-family: 'VT323', monospace; font-size: 17px; line-height: 1; padding: 5px 10px 4px; box-shadow: 0 0 0 2px rgba(247,245,240,.18); background: rgba(247,245,240,.06); margin: 0 0 .7rem; color: #F7F5F0; }
+  .hk-status i { width: 9px; height: 9px; background: #A9C862; animation: hkBlink 1.4s steps(1) infinite; }
+  @keyframes hkBlink { 50% { opacity: .25; } }
+  .hk-ft-h { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 500; font-size: 24px; line-height: 1.2; letter-spacing: -.02em; margin: 0; color: #F7F5F0; }
+  .hk-ft-h span { font-family: 'VT323', monospace; font-weight: 400; letter-spacing: 0; font-size: 1.05em; color: #F2C05C; white-space: nowrap; }
+  .hk-btn { flex: none; font-family: 'VT323', monospace; font-size: 22px; line-height: 1; padding: 11px 18px 10px; background: #CEF17B; color: #1F4A2C; text-decoration: none; transition: background .12s steps(2), transform .12s steps(2); }
+  .hk-btn:hover, .hk-btn:focus-visible { background: #C2E86A; }
+  .hk-btn:active { background: #B4DB5C; transform: translateY(2px); }
+  .hk-btn:focus-visible { outline: 2px solid #CEF17B; outline-offset: 3px; }
+  .hk-ft-bottom { font-family: 'VT323', monospace; font-size: 16px; color: rgba(247,245,240,.45); padding: .7rem 1.75rem; border-top: 1px solid rgba(247,245,240,.1); background: rgba(26,23,20,.7); }
+  @media (max-width: 700px) {
+    .hk-nav { padding: .9rem 10px; }
+    .hk-pill a { padding: 8px 16px; font-size: 14px; }
+    .hk-home { padding: 8px 12px 8px 16px !important; }
+    .hk-pill a.hk-here { padding-left: 24px; }
+    .hero-wrap { padding-top: 58px; }
+    .hk-ft { width: calc(100% - 20px); margin-bottom: 10px; }
+    .hk-ft-in { flex-direction: column; align-items: flex-start; padding: 1.3rem 1.2rem; }
+    .hk-ft-h { font-size: 21px; }
+    .hk-ft-bottom { padding: .7rem 1.2rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .hk-status i { animation: none; } }
+
+
+  /* ===== side contents: structure on the left, full story on the right ===== */
+  .cs-layout { max-width: 1200px; margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: 210px minmax(0,1fr); gap: 64px; align-items: start; }
+  .cs-layout > .page { max-width: 820px; width: 100%; margin: 0; padding: 0; min-width: 0; }
+  .cs-toc { position: sticky; top: 92px; padding-top: 4.5rem; max-height: calc(100vh - 110px); overflow-y: auto; scrollbar-width: none; }
+  .cs-toc::-webkit-scrollbar { display: none; }
+  .cs-back { display: inline-flex; align-items: center; gap: 8px; font-family: 'VT323', monospace; font-size: 19px; letter-spacing: .04em; color: var(--ink-muted, #6b655d); text-decoration: none; margin-bottom: 1.6rem; }
+  .cs-back:hover { color: var(--ink, #1a1714); }
+  .cs-back b { font-weight: 400; transition: transform .2s steps(2); display: inline-block; }
+  .cs-back:hover b { transform: translateX(-4px); }
+  .cs-toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+  .cs-toc a.cs-item { position: relative; display: flex; align-items: baseline; gap: 10px; padding: 7px 0 7px 16px; font-size: 15px; line-height: 1.35; color: var(--ink-faint, #9a938a); text-decoration: none; transition: color .2s; }
+  .cs-toc a.cs-item span { font-family: 'VT323', monospace; font-size: 16px; color: inherit; opacity: .8; min-width: 18px; }
+  .cs-toc a.cs-item::before { content: ''; position: absolute; left: 0; top: 50%; width: 6px; height: 6px; margin-top: -3px; background: #F2C05C; opacity: 0; transition: opacity .15s steps(2); }
+  .cs-toc a.cs-item:hover { color: var(--ink, #1a1714); }
+  .cs-toc a.cs-item.on { color: var(--ink, #1a1714); font-weight: 500; }
+  .cs-toc a.cs-item.on::before { opacity: 1; }
+  .cs-anchor { scroll-margin-top: 96px; }
+  @media (max-width: 960px) {
+    .cs-layout { display: block; padding: 0; }
+    .cs-layout > .page { max-width: 820px; margin: 0 auto; padding: 0 1.5rem; }
+    .cs-toc { position: sticky; top: 62px; z-index: 50; max-height: none; padding: 10px 0; margin: 0; background: var(--cream, #F7F5F0); border-bottom: 1px solid rgba(26,23,20,.08); overflow-x: auto; overflow-y: hidden; }
+    .cs-back { display: none; }
+    .cs-toc ol { flex-direction: row; gap: 6px; padding: 0 1rem; width: max-content; }
+    .cs-toc a.cs-item { padding: 6px 10px 5px; white-space: nowrap; font-size: 13px; box-shadow: inset 0 0 0 1.5px rgba(26,23,20,.15); }
+    .cs-toc a.cs-item::before { display: none; }
+    .cs-toc a.cs-item.on { background: #CEF17B; color: #1F4A2C; box-shadow: none; }
+    .cs-anchor { scroll-margin-top: 120px; }
+  }
+
+
+  /* ===== next case study: pixel card ===== */
+  .nx-wrap { max-width: 1072px; width: calc(100% - 32px); margin: 5rem auto 0; }
+  .nx-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: .8rem; font-family: 'VT323', monospace; font-size: 19px; color: var(--ink-muted, #6b655d); }
+  .nx-all { color: var(--ink-muted, #6b655d); text-decoration: none; }
+  .nx-all:hover { color: var(--ink, #1a1714); }
+  .nx-pips { display: inline-flex; align-items: center; gap: 6px; }
+  .nx-pips i { width: 10px; height: 10px; box-shadow: inset 0 0 0 2px rgba(26,23,20,.3); }
+  .nx-pips i.on { background: #1a1714; box-shadow: none; }
+  a.nx { display: flex; align-items: center; justify-content: space-between; gap: 2rem; padding: 1.8rem 2rem; border-radius: 20px; text-decoration: none; color: #F7F5F0; background-color: #1a1714;
+    background-image: linear-gradient(rgba(247,245,240,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(247,245,240,.06) 1px, transparent 1px); background-size: 16px 16px; transition: transform .2s steps(3); }
+  a.nx:hover { transform: translateY(-3px); }
+  .nx-label { display: flex; align-items: center; gap: 10px; font-family: 'VT323', monospace; font-size: 20px; color: #F2C05C; margin: 0 0 .7rem; }
+  .nx-num { font-size: 19px; line-height: 1; padding: 3px 7px 2px; background: #F7F5F0; color: #1a1714; }
+  .nx-title { font-family: 'Cabinet Grotesk', sans-serif; font-weight: 500; font-size: clamp(22px, 2.6vw, 30px); line-height: 1.2; letter-spacing: -.015em; margin: 0 0 1rem; color: #F7F5F0; }
+  .nx-facts { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
+  .nx-facts li { font-family: 'VT323', monospace; font-size: 17px; line-height: 1; padding: 5px 9px 4px; color: rgba(247,245,240,.85); box-shadow: inset 0 0 0 1.5px rgba(247,245,240,.2); }
+  .nx-go { flex: none; display: inline-flex; align-items: center; gap: 10px; font-family: 'VT323', monospace; font-size: 24px; line-height: 1; padding: 13px 20px 12px; background: #CEF17B; color: #1F4A2C; transition: background .12s steps(2); }
+  .nx-go b { font-weight: 400; display: inline-block; transition: transform .2s steps(2); }
+  a.nx:hover .nx-go { background: #C2E86A; }
+  a.nx:hover .nx-go b { transform: translateX(5px); }
+  a.nx:focus-visible { outline: 2px solid #CEF17B; outline-offset: 4px; }
+  .hk-ft { margin-top: 1.5rem !important; }
+  @media (max-width: 700px) {
+    .nx-wrap { width: calc(100% - 20px); margin-top: 3.5rem; }
+    a.nx { flex-direction: column; align-items: flex-start; gap: 1.2rem; padding: 1.4rem 1.2rem; }
+    .nx-top { font-size: 17px; }
+  }
+  @media (prefers-reduced-motion: reduce) { a.nx, .nx-go b { transition: none; } }
+
+</style>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAV -->
+<div class="hk-nav" role="navigation" aria-label="Main">
+  <div class="hk-pill">
+    <a class="hk-home" href="index.html#home" aria-label="Home"><svg viewBox="0 0 11 9" shape-rendering="crispEdges" aria-hidden="true"><rect x="5" y="0" width="1" height="1" fill="#B5C2EC"/><rect x="4" y="1" width="1" height="1" fill="#B5C2EC"/><rect x="5" y="1" width="1" height="1" fill="#7487C8"/><rect x="4" y="2" width="1" height="1" fill="#B5C2EC"/><rect x="5" y="2" width="1" height="1" fill="#7487C8"/><rect x="6" y="2" width="1" height="1" fill="#7487C8"/><rect x="3" y="3" width="1" height="1" fill="#B5C2EC"/><rect x="4" y="3" width="1" height="1" fill="#B5C2EC"/><rect x="5" y="3" width="1" height="1" fill="#7487C8"/><rect x="6" y="3" width="1" height="1" fill="#7487C8"/><rect x="3" y="4" width="1" height="1" fill="#B5C2EC"/><rect x="4" y="4" width="1" height="1" fill="#7487C8"/><rect x="5" y="4" width="1" height="1" fill="#7487C8"/><rect x="6" y="4" width="1" height="1" fill="#7487C8"/><rect x="7" y="4" width="1" height="1" fill="#7487C8"/><rect x="2" y="5" width="1" height="1" fill="#B5C2EC"/><rect x="3" y="5" width="1" height="1" fill="#B5C2EC"/><rect x="4" y="5" width="1" height="1" fill="#7487C8"/><rect x="5" y="5" width="1" height="1" fill="#7487C8"/><rect x="6" y="5" width="1" height="1" fill="#7487C8"/><rect x="7" y="5" width="1" height="1" fill="#7487C8"/><rect x="8" y="5" width="1" height="1" fill="#7487C8"/><rect x="2" y="6" width="1" height="1" fill="#F2C05C"/><rect x="3" y="6" width="1" height="1" fill="#F2C05C"/><rect x="4" y="6" width="1" height="1" fill="#F2C05C"/><rect x="5" y="6" width="1" height="1" fill="#F2C05C"/><rect x="6" y="6" width="1" height="1" fill="#F2C05C"/><rect x="7" y="6" width="1" height="1" fill="#F2C05C"/><rect x="8" y="6" width="1" height="1" fill="#F2C05C"/><rect x="0" y="7" width="1" height="1" fill="#7487C8"/><rect x="1" y="7" width="1" height="1" fill="#7487C8"/><rect x="2" y="7" width="1" height="1" fill="#7487C8"/><rect x="3" y="7" width="1" height="1" fill="#7487C8"/><rect x="4" y="7" width="1" height="1" fill="#7487C8"/><rect x="5" y="7" width="1" height="1" fill="#7487C8"/><rect x="6" y="7" width="1" height="1" fill="#7487C8"/><rect x="7" y="7" width="1" height="1" fill="#7487C8"/><rect x="8" y="7" width="1" height="1" fill="#7487C8"/><rect x="9" y="7" width="1" height="1" fill="#7487C8"/><rect x="10" y="7" width="1" height="1" fill="#7487C8"/><rect x="1" y="8" width="1" height="1" fill="#7487C8"/><rect x="2" y="8" width="1" height="1" fill="#7487C8"/><rect x="3" y="8" width="1" height="1" fill="#7487C8"/><rect x="4" y="8" width="1" height="1" fill="#7487C8"/><rect x="5" y="8" width="1" height="1" fill="#7487C8"/><rect x="6" y="8" width="1" height="1" fill="#7487C8"/><rect x="7" y="8" width="1" height="1" fill="#7487C8"/><rect x="8" y="8" width="1" height="1" fill="#7487C8"/><rect x="9" y="8" width="1" height="1" fill="#7487C8"/></svg></a>
+    <span class="hk-div"></span><a href="index.html#work" class="hk-here">Work</a>
+    <span class="hk-div"></span><a href="index.html#leadership">Design Leadership</a>
+    <span class="hk-div"></span><a href="index.html#about">About</a>
+    <span class="hk-div"></span><a href="harshitha-kalidindi-resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <span class="hk-div"></span><a href="sustainability.html">Sustainability Project</a>
+  </div>
+</div>
+
+<!-- HERO — dark full-bleed, centered, with pixel paintbrush -->
+<div class="hero-wrap" id="heroWrap">
+<canvas class="hero-grid" id="heroGrid" aria-hidden="true"></canvas>
+<div class="hero-fade" aria-hidden="true"></div>
+<div class="hero">
+  <span class="eyebrow">Case Study 02 · Design Systems</span>
+  <h1 class="hero-title">One design language for an enterprise procurement platform.</h1>
+  <p class="hero-module">Establishing a shared design language across product, marketing, and client-facing surfaces</p>
+</div>
+
+<!-- META STRIP -->
+<div class="meta-strip">
+  <div class="meta-strip-item">
+    <div class="meta-strip-label">Product</div>
+    <div class="meta-strip-value">EffiGO eProcurement</div>
+  </div>
+  <div class="meta-strip-item">
+    <div class="meta-strip-label">My Role</div>
+    <div class="meta-strip-value">Lead Designer</div>
+  </div>
+  <div class="meta-strip-item">
+    <div class="meta-strip-label">Scope</div>
+    <div class="meta-strip-value">Foundations + Component Library</div>
+  </div>
+</div>
+</div><!-- end .hero-wrap -->
+
+<div class="cs-layout">
+<aside class="cs-toc" aria-label="On this page">
+  <a class="cs-back" href="index.html#work"><b aria-hidden="true">←</b> BACK</a>
+  <ol>
+    <li><a class="cs-item" href="#s-context"><span>01</span>Context</a></li>
+    <li><a class="cs-item" href="#s-the-problem"><span>02</span>The Problem</a></li>
+    <li><a class="cs-item" href="#s-the-system"><span>03</span>The System</a></li>
+    <li><a class="cs-item" href="#s-impact"><span>04</span>Impact</a></li>
+    <li><a class="cs-item" href="#s-approach"><span>05</span>Approach</a></li>
+    <li><a class="cs-item" href="#s-foundations"><span>06</span>Foundations</a></li>
+    <li><a class="cs-item" href="#s-components"><span>07</span>Components</a></li>
+    <li><a class="cs-item" href="#s-developer-collaboration"><span>08</span>Developer Collaboration</a></li>
+    <li><a class="cs-item" href="#s-reflection"><span>09</span>Reflection</a></li>
+  </ol>
+</aside>
+<div class="page">
+
+  <!-- 01 CONTEXT -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-context">01 — Context</span>
+    <h2 class="section-heading">No system, no shared language</h2>
+    <p class="body">EffiGO is an enterprise eProcurement platform serving clients across sourcing, procurement, dispatch, and contract management. As the product grew across modules, so did the inconsistency — each area developed its own visual patterns, component styles, and interaction logic independently.</p>
+    <p class="body">The problem wasn't isolated to the product. Marketing materials, client presentations, and the platform itself all looked like they came from different companies. There was no brand system, no shared component set, and no common language between designers and developers.</p>
+    <p class="body">I helped design the system from the ground up — establishing foundations, designing the component library, and working directly with the development team through handoff.</p>
+  </div>
+
+  <!-- 02 THE PROBLEM -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-the-problem">02 — The Problem</span>
+    <h2 class="section-heading">One product, no shared visual logic</h2>
+    <p class="body">Every team was making design decisions independently, with no reference point. Each module used its own layout logic, spacing rules, and component styles, so dashboards, tables, and configuration-heavy forms all behaved differently — and <strong>users had to relearn the interface</strong> each time they moved between modules.</p>
+    <p class="body">Complex admin and workflow screens became dense and hard to scan because no hierarchy principles were applied consistently. Beyond the product, marketing decks and client presentations looked disconnected from what clients actually used day to day.</p>
+
+    <div class="callout">
+      <div class="callout-label">The development cost</div>
+      <div class="callout-text">Without a shared component library, the same UI patterns were being rebuilt from scratch across modules — time spent on solved problems rather than new ones.</div>
+    </div>
+  </div>
+
+  <!-- 03 THE SYSTEM -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-the-system">03 — The System</span>
+    <h2 class="section-heading">Principles first, then foundations, then every component on top</h2>
+    <p class="body">Each layer inherits from the one above it, so a decision made once in the foundations shows up consistently across every module.</p>
+    <div class="ds-visual">
+      <svg viewBox="0 0 640 250" role="img" aria-label="Diagram of the system's layers: 4 principles feed foundations (colour, typography, spacing), which feed 11 component families, which are used across every product module.">
+        <rect x=".5" y=".5" width="639" height="249" rx="12" fill="#fff" stroke="#E6E2DA"/>
+        <g>
+          <rect x="24" y="20" width="592" height="42" rx="8" fill="#F7F5F0" stroke="#E6E2DA"/>
+          <text x="44" y="46" class="ds-t-lbl">PRINCIPLES</text>
+          <rect x="250" y="30" width="80" height="22" rx="11" fill="#EDEAE3"/><text x="290" y="45" class="ds-t-chip" text-anchor="middle">Clarity</text>
+          <rect x="338" y="30" width="80" height="22" rx="11" fill="#EDEAE3"/><text x="378" y="45" class="ds-t-chip" text-anchor="middle">Density</text>
+          <rect x="426" y="30" width="86" height="22" rx="11" fill="#EDEAE3"/><text x="469" y="45" class="ds-t-chip" text-anchor="middle">Predictable</text>
+          <rect x="520" y="30" width="80" height="22" rx="11" fill="#EDEAE3"/><text x="560" y="45" class="ds-t-chip" text-anchor="middle">Handoff</text>
+        </g>
+        <path d="M320 62 v10" stroke="#D3CDC2" stroke-width="1.5"/><path d="M315 68 l5 5 l5 -5" fill="none" stroke="#D3CDC2" stroke-width="1.5"/>
+        <g>
+          <rect x="24" y="76" width="592" height="42" rx="8" fill="#FAECE7"/>
+          <text x="44" y="102" class="ds-t-lbl" style="fill:#C1672A">FOUNDATIONS</text>
+          <rect x="338" y="86" width="80" height="22" rx="11" fill="#fff"/><text x="378" y="101" class="ds-t-chip" text-anchor="middle">Colour</text>
+          <rect x="426" y="86" width="86" height="22" rx="11" fill="#fff"/><text x="469" y="101" class="ds-t-chip" text-anchor="middle">Typography</text>
+          <rect x="520" y="86" width="80" height="22" rx="11" fill="#fff"/><text x="560" y="101" class="ds-t-chip" text-anchor="middle">Spacing</text>
+        </g>
+        <path d="M320 118 v10" stroke="#D3CDC2" stroke-width="1.5"/><path d="M315 124 l5 5 l5 -5" fill="none" stroke="#D3CDC2" stroke-width="1.5"/>
+        <g>
+          <rect x="24" y="132" width="592" height="42" rx="8" fill="#F7F5F0" stroke="#E6E2DA"/>
+          <text x="44" y="158" class="ds-t-lbl">COMPONENTS</text>
+          <text x="600" y="158" class="ds-t-big" text-anchor="end">11 families</text>
+          <g fill="#D3CDC2"><rect x="250" y="145" width="18" height="16" rx="3"/><rect x="274" y="145" width="18" height="16" rx="3"/><rect x="298" y="145" width="18" height="16" rx="3"/><rect x="322" y="145" width="18" height="16" rx="3"/><rect x="346" y="145" width="18" height="16" rx="3"/><rect x="370" y="145" width="18" height="16" rx="3"/><rect x="394" y="145" width="18" height="16" rx="3"/><rect x="418" y="145" width="18" height="16" rx="3"/><rect x="442" y="145" width="18" height="16" rx="3"/><rect x="466" y="145" width="18" height="16" rx="3"/><rect x="490" y="145" width="18" height="16" rx="3"/></g>
+        </g>
+        <path d="M320 174 v10" stroke="#D3CDC2" stroke-width="1.5"/><path d="M315 180 l5 5 l5 -5" fill="none" stroke="#D3CDC2" stroke-width="1.5"/>
+        <g>
+          <rect x="24" y="188" width="592" height="42" rx="8" fill="#1a1714"/>
+          <text x="44" y="214" class="ds-t-lbl" style="fill:#F7F5F0">PRODUCT MODULES</text>
+          <text x="600" y="214" class="ds-t-big" text-anchor="end" style="fill:#F7F5F0">Every module</text>
+          <g fill="rgba(247,245,240,.25)"><rect x="250" y="201" width="30" height="16" rx="3"/><rect x="286" y="201" width="30" height="16" rx="3"/><rect x="322" y="201" width="30" height="16" rx="3"/><rect x="358" y="201" width="30" height="16" rx="3"/><rect x="394" y="201" width="30" height="16" rx="3"/><rect x="430" y="201" width="30" height="16" rx="3"/></g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 04 IMPACT -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-impact">04 — Impact</span>
+    <h2 class="section-heading">From scattered patterns to a shared framework</h2>
+    <p class="body">What began as inconsistency across every surface became a framework that simplified decisions and reduced friction — for designers, developers, and clients alike.</p>
+    <div class="results-grid">
+      <div class="result-card"><div class="result-stat">4</div><div class="result-label">principles guiding every design decision</div></div>
+      <div class="result-card"><div class="result-stat">11</div><div class="result-label">component families, each covering every state</div></div>
+      <div class="result-card"><div class="result-stat">0</div><div class="result-label">new one-off patterns introduced after launch</div></div>
+      <div class="result-card"><div class="result-stat">1</div><div class="result-label">visual language across product, marketing, and client decks</div></div>
+    </div>
+    <ul class="impact-list">
+      <li><span><strong>Faster development</strong> — developers working from a shared library rather than rebuilding from scratch per module</span></li>
+      <li><span><strong>Reduced design rework</strong> — decisions made at system level rather than per screen, freeing designers to focus on harder problems</span></li>
+      <li><span><strong>Developer confidence</strong> — less ambiguity in handoff, implementation decisions no longer left to interpretation</span></li>
+    </ul>
+    <p class="body" style="margin-top:1.75rem;">The design system was not a deliverable — it was infrastructure. The real measure of success was that it became invisible: designers stopped debating component decisions, developers stopped improvising visual logic, and the product started feeling like a single coherent tool rather than a collection of modules.</p>
+  </div>
+
+  <!-- 05 APPROACH -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-approach">05 — Approach</span>
+    <h2 class="section-heading">Principles before pixels</h2>
+    <p class="body">Before building a single component, I established the principles that would govern every decision. For a data-heavy enterprise product, components had to work across dense admin tables and sparse empty states, across tight and wide viewports, and for both technical and non-technical users.</p>
+    <p class="body">The sequencing was deliberate: <strong>foundations first</strong> — colour, typography, spacing — then components. Without a stable foundation, every component decision becomes a negotiation. With it, components almost design themselves.</p>
+
+    <div class="principles-grid">
+      <div class="principle-card">
+        <div class="principle-num">Principle 01</div>
+        <div class="principle-title">Clarity over decoration</div>
+        <div class="principle-body">Every visual decision had to earn its place by aiding comprehension. Nothing decorative that didn't carry meaning.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">Principle 02</div>
+        <div class="principle-title">Density without noise</div>
+        <div class="principle-body">Enterprise workflows require dense UIs. The system had to support high information density without creating visual chaos — structure through hierarchy, not decoration.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">Principle 03</div>
+        <div class="principle-title">Predictable patterns</div>
+        <div class="principle-body">Users moving between modules should never have to relearn how something works. Consistency reduces cognitive load across the whole product.</div>
+      </div>
+      <div class="principle-card">
+        <div class="principle-num">Principle 04</div>
+        <div class="principle-title">Built for handoff</div>
+        <div class="principle-body">Every component needed to be documented well enough that a developer could implement it without a design walkthrough. The system had to work without me in the room.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 06 FOUNDATIONS -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-foundations">06 — Foundations</span>
+    <h2 class="section-heading">A shared language for the whole product</h2>
+    <p class="body">Foundations are the decisions that everything else inherits from. Getting these right meant every component built on top of them would feel consistent — without anyone having to consciously enforce it.</p>
+
+    <div class="foundation-block" style="margin-top:2rem;">
+      <div class="foundation-label">Colour</div>
+      <p class="body">A primary navy anchors the brand across product and marketing. A semantic status layer gives meaning to state across every module — including a distinct colour for rejection. In a procurement workflow, the difference between a warning and a rejection carries real business consequence, and the colour system had to reflect that.</p>
+      <div class="ds-visual">
+        <svg viewBox="0 0 640 170" role="img" aria-label="Semantic colour layer: success, warning, error, and a separate rejection colour, above a five-step neutral text scale.">
+          <rect x=".5" y=".5" width="639" height="169" rx="12" fill="#fff" stroke="#E6E2DA"/>
+          <text x="24" y="32" class="ds-t-lbl">SEMANTIC STATUS LAYER</text>
+          <rect x="24" y="44" width="136" height="44" rx="8" fill="#EBF5EC"/><circle cx="44" cy="66" r="7" fill="#4A8C4F"/><text x="58" y="70" class="ds-t-chip" style="fill:#27500A">Success</text>
+          <rect x="172" y="44" width="136" height="44" rx="8" fill="#FAEEDA"/><circle cx="192" cy="66" r="7" fill="#BA7517"/><text x="206" y="70" class="ds-t-chip" style="fill:#633806">Warning</text>
+          <rect x="320" y="44" width="136" height="44" rx="8" fill="#FCEBEB"/><circle cx="340" cy="66" r="7" fill="#E24B4A"/><text x="354" y="70" class="ds-t-chip" style="fill:#791F1F">Error</text>
+          <rect x="468" y="44" width="148" height="44" rx="8" fill="#F4E6EA" stroke="#8C2F45" stroke-width="1.5"/><circle cx="488" cy="66" r="7" fill="#8C2F45"/><text x="502" y="70" class="ds-t-chip" style="fill:#5A1A2B">Rejection</text>
+          <text x="542" y="104" class="ds-t-note" text-anchor="middle">its own colour, not error</text>
+          <text x="24" y="130" class="ds-t-lbl">NEUTRAL TEXT SCALE</text>
+          <rect x="24" y="140" width="112" height="14" rx="3" fill="#1a1714"/><rect x="144" y="140" width="112" height="14" rx="3" fill="#5c5652"/><rect x="264" y="140" width="112" height="14" rx="3" fill="#8a7f78"/><rect x="384" y="140" width="112" height="14" rx="3" fill="#B8B0A6"/><rect x="504" y="140" width="112" height="14" rx="3" fill="#E6E2DA"/>
+        </svg>
+      </div>
+      <p class="ds-caption">Semantic roles shown with neutral example tones, not the product's actual palette.</p>
+    </div>
+
+    <div class="foundation-block">
+      <div class="foundation-label">Typography — Manrope + Poppins</div>
+      <p class="body">Two typefaces, each with a clear role. Manrope Extrabold handles headings and module titles, bringing structural weight to dashboards and navigation. Poppins covers body text, form labels, table data, and metadata. The scale runs from 32px headings to 10px metadata, with every size and weight named and documented — so a developer could implement from spec without guessing.</p>
+      <div class="ds-visual">
+        <svg viewBox="0 0 640 236" role="img" aria-label="Type scale from a 32 pixel heading down to 10 pixel table metadata, each level named.">
+          <rect x=".5" y=".5" width="639" height="235" rx="12" fill="#fff" stroke="#E6E2DA"/>
+          <text x="24" y="52" style="font-size:32px;font-weight:700;fill:#1a1714">Module title</text><text x="616" y="48" class="ds-t-note" text-anchor="end">Heading · 32px</text>
+          <line x1="24" y1="68" x2="616" y2="68" stroke="#EDEAE3"/>
+          <text x="24" y="100" style="font-size:20px;font-weight:600;fill:#1a1714">Section heading</text><text x="616" y="97" class="ds-t-note" text-anchor="end">Subheading</text>
+          <line x1="24" y1="116" x2="616" y2="116" stroke="#EDEAE3"/>
+          <text x="24" y="144" style="font-size:15px;fill:#5c5652">Body text and form labels</text><text x="616" y="142" class="ds-t-note" text-anchor="end">Body</text>
+          <line x1="24" y1="160" x2="616" y2="160" stroke="#EDEAE3"/>
+          <text x="24" y="186" style="font-size:12px;fill:#5c5652">Table data</text><text x="616" y="185" class="ds-t-note" text-anchor="end">Table</text>
+          <line x1="24" y1="200" x2="616" y2="200" stroke="#EDEAE3"/>
+          <text x="24" y="222" style="font-size:10px;fill:#8a7f78">Table metadata · last updated</text><text x="616" y="222" class="ds-t-note" text-anchor="end">Metadata · 10px</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="foundation-block">
+      <div class="foundation-label">Spacing and layout</div>
+      <p class="body">A standardised spacing system replaced ad hoc padding and margin decisions. Consistent component spacing, section padding, and grid behaviour created predictable layouts across modules — reducing the effort of moving between different parts of the product.</p>
+    </div>
+  </div>
+
+  <!-- 07 COMPONENTS -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-components">07 — Components</span>
+    <h2 class="section-heading">Every state, every edge case</h2>
+    <p class="body">The hardest part of building components for an enterprise system isn't the default state — it's everything else. Empty, loading, error, disabled, focused, filled, indeterminate. Here are three in depth, followed by the rest of the library.</p>
+
+    <div class="comp-deep">
+      <div class="comp-deep-head"><span class="comp-num">01</span><span class="comp-title">File uploads</span></div>
+      <p class="comp-desc">Procurement workflows involve heavy document handling, so this component covers every real state users encounter — with and without a template download option.</p>
+      <div class="ds-visual">
+        <svg viewBox="0 0 640 170" role="img" aria-label="File upload in four states: empty drop zone, uploading with progress bar, uploaded with preview and delete, and error with retry.">
+          <rect x=".5" y=".5" width="639" height="169" rx="12" fill="#fff" stroke="#E6E2DA"/>
+          <rect x="20" y="20" width="136" height="100" rx="8" fill="none" stroke="#D3CDC2" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <path d="M88 76 v-22 M79 62 l9 -9 l9 9" stroke="#8a7f78" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="56" y="88" width="64" height="6" rx="3" fill="#E6E2DA"/>
+          <text x="88" y="148" class="ds-t-lbl" text-anchor="middle">EMPTY</text>
+          <rect x="172" y="20" width="136" height="100" rx="8" fill="#F7F5F0" stroke="#E6E2DA"/>
+          <rect x="186" y="40" width="22" height="28" rx="3" fill="#D3CDC2"/><rect x="216" y="44" width="72" height="6" rx="3" fill="#D3CDC2"/><rect x="216" y="56" width="44" height="5" rx="2.5" fill="#E6E2DA"/>
+          <rect x="186" y="86" width="108" height="6" rx="3" fill="#E6E2DA"/><rect x="186" y="86" width="64" height="6" rx="3" fill="#C1672A"/>
+          <text x="240" y="148" class="ds-t-lbl" text-anchor="middle">UPLOADING</text>
+          <rect x="324" y="20" width="136" height="100" rx="8" fill="#F7F5F0" stroke="#E6E2DA"/>
+          <rect x="338" y="40" width="22" height="28" rx="3" fill="#D3CDC2"/><rect x="368" y="44" width="64" height="6" rx="3" fill="#D3CDC2"/><rect x="368" y="56" width="40" height="5" rx="2.5" fill="#E6E2DA"/>
+          <circle cx="444" cy="50" r="8" fill="#4A8C4F"/><path d="M440 50 l3 3 l5 -5.5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <rect x="338" y="86" width="52" height="18" rx="5" fill="#fff" stroke="#E6E2DA"/><rect x="398" y="86" width="48" height="18" rx="5" fill="#fff" stroke="#E6E2DA"/><path d="M417 91 l8 8 M425 91 l-8 8" stroke="#8a7f78" stroke-width="1.5"/>
+          <text x="392" y="148" class="ds-t-lbl" text-anchor="middle">UPLOADED</text>
+          <rect x="476" y="20" width="144" height="100" rx="8" fill="#FCEBEB" stroke="#F7C1C1"/>
+          <rect x="490" y="40" width="22" height="28" rx="3" fill="#F09595"/><rect x="520" y="44" width="72" height="6" rx="3" fill="#F09595"/><rect x="520" y="56" width="52" height="5" rx="2.5" fill="#F7C1C1"/>
+          <rect x="490" y="86" width="60" height="18" rx="5" fill="#fff" stroke="#E24B4A"/><text x="520" y="99" style="font-size:10px;fill:#A32D2D;font-weight:500" text-anchor="middle">Retry</text>
+          <text x="548" y="148" class="ds-t-lbl" text-anchor="middle">ERROR</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="comp-deep">
+      <div class="comp-deep-head"><span class="comp-num">02</span><span class="comp-title">Tags + status indicators</span></div>
+      <p class="comp-desc">Status tags and progress rings used across approval workflows and supplier management — built on the semantic colour layer, so every state reads the same way in every module.</p>
+      <div class="ds-visual">
+        <svg viewBox="0 0 640 130" role="img" aria-label="Status tags for approved, pending, rejected, and draft, next to progress rings at a quarter, just over half, and complete.">
+          <rect x=".5" y=".5" width="639" height="129" rx="12" fill="#fff" stroke="#E6E2DA"/>
+          <rect x="24" y="30" width="92" height="26" rx="13" fill="#EBF5EC"/><circle cx="40" cy="43" r="4" fill="#4A8C4F"/><text x="50" y="47" class="ds-t-chip" style="fill:#27500A">Approved</text>
+          <rect x="124" y="30" width="84" height="26" rx="13" fill="#FAEEDA"/><circle cx="140" cy="43" r="4" fill="#BA7517"/><text x="150" y="47" class="ds-t-chip" style="fill:#633806">Pending</text>
+          <rect x="216" y="30" width="88" height="26" rx="13" fill="#F4E6EA"/><circle cx="232" cy="43" r="4" fill="#8C2F45"/><text x="242" y="47" class="ds-t-chip" style="fill:#5A1A2B">Rejected</text>
+          <rect x="312" y="30" width="70" height="26" rx="13" fill="#EDEAE3"/><circle cx="328" cy="43" r="4" fill="#8a7f78"/><text x="338" y="47" class="ds-t-chip">Draft</text>
+          <rect x="24" y="74" width="120" height="26" rx="6" fill="#fff" stroke="#E6E2DA"/><rect x="34" y="84" width="70" height="6" rx="3" fill="#D3CDC2"/><path d="M126 83 l8 8 M134 83 l-8 8" stroke="#8a7f78" stroke-width="1.5"/>
+          <text x="164" y="92" class="ds-t-note">dismissible action tag</text>
+          <g transform="translate(450 65)"><circle r="22" fill="none" stroke="#EDEAE3" stroke-width="6"/><circle r="22" fill="none" stroke="#C1672A" stroke-width="6" stroke-dasharray="34.6 138.2" transform="rotate(-90)" stroke-linecap="round"/><text y="4" class="ds-t-chip" text-anchor="middle">25%</text></g>
+          <g transform="translate(520 65)"><circle r="22" fill="none" stroke="#EDEAE3" stroke-width="6"/><circle r="22" fill="none" stroke="#BA7517" stroke-width="6" stroke-dasharray="83 138.2" transform="rotate(-90)" stroke-linecap="round"/><text y="4" class="ds-t-chip" text-anchor="middle">60%</text></g>
+          <g transform="translate(590 65)"><circle r="22" fill="none" stroke="#4A8C4F" stroke-width="6"/><path d="M-7 0 l5 5 l9 -10" stroke="#4A8C4F" stroke-width="2.5" fill="none" stroke-linecap="round"/></g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="comp-deep">
+      <div class="comp-deep-head"><span class="comp-num">03</span><span class="comp-title">Workflow builder</span></div>
+      <p class="comp-desc">The most complex category: connector lines, condition builders, flow type selectors, and approval chain configurators — designed so non-technical users can set up complex approval logic without engineering support.</p>
+      <div class="ds-visual">
+        <svg viewBox="0 0 640 200" role="img" aria-label="Approval flow: a request goes to a condition; one branch goes through two approvers in sequence, the other branch is approved automatically.">
+          <rect x=".5" y=".5" width="639" height="199" rx="12" fill="#fff" stroke="#E6E2DA"/>
+          <rect x="24" y="80" width="110" height="40" rx="8" fill="#F7F5F0" stroke="#D3CDC2"/><text x="79" y="104" class="ds-t-chip" text-anchor="middle">Request</text>
+          <path d="M134 100 h40" stroke="#D3CDC2" stroke-width="1.5"/><path d="M169 95 l5 5 l-5 5" fill="none" stroke="#D3CDC2" stroke-width="1.5"/>
+          <path d="M224 70 l44 30 l-44 30 l-44 -30z" fill="#FAECE7" stroke="#C1672A" stroke-width="1.5"/><text x="224" y="104" class="ds-t-chip" text-anchor="middle" style="fill:#993C1D">Condition</text>
+          <path d="M268 100 h26 v-50 h30" fill="none" stroke="#D3CDC2" stroke-width="1.5"/><path d="M319 45 l5 5 l-5 5" fill="none" stroke="#D3CDC2" stroke-width="1.5"/>
+          <text x="300" y="41" class="ds-t-note">yes</text>
+          <path d="M268 100 h26 v50 h30" fill="none" stroke="#D3CDC2" stroke-width="1.5"/><path d="M319 145 l5 5 l-5 5" fill="none" stroke="#D3CDC2" stroke-width="1.5"/>
+          <text x="300" y="167" class="ds-t-note">no</text>
+          <rect x="324" y="30" width="116" height="40" rx="8" fill="#fff" stroke="#D3CDC2"/><circle cx="344" cy="50" r="8" fill="#D3CDC2"/><text x="358" y="54" class="ds-t-chip">Approver 1</text>
+          <path d="M440 50 h34" stroke="#D3CDC2" stroke-width="1.5"/><path d="M469 45 l5 5 l-5 5" fill="none" stroke="#D3CDC2" stroke-width="1.5"/>
+          <rect x="474" y="30" width="116" height="40" rx="8" fill="#fff" stroke="#D3CDC2"/><circle cx="494" cy="50" r="8" fill="#D3CDC2"/><text x="508" y="54" class="ds-t-chip">Approver 2</text>
+          <rect x="324" y="130" width="130" height="40" rx="8" fill="#EBF5EC"/><circle cx="344" cy="150" r="8" fill="#4A8C4F"/><path d="M340 150 l3 3 l5 -5.5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><text x="358" y="154" class="ds-t-chip" style="fill:#27500A">Auto-approve</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="comp-grid-label">Also in the library</div>
+    <div class="comp-grid">
+      <div class="comp-tile"><div class="comp-tile-name">Text fields</div><div class="comp-tile-desc">Single and multi-line; default, focused, filled, disabled, error; helper text and character counters.</div></div>
+      <div class="comp-tile"><div class="comp-tile-name">Dropdowns</div><div class="comp-tile-desc">Single and multi-select, grouped options, and action menus, with every interaction state.</div></div>
+      <div class="comp-tile"><div class="comp-tile-name">Banners</div><div class="comp-tile-desc">Default, warning, success, and error variants for system messages and validation.</div></div>
+      <div class="comp-tile"><div class="comp-tile-name">Notifications</div><div class="comp-tile-desc">Compact and expanded, with or without avatar, for panel and inline use.</div></div>
+      <div class="comp-tile"><div class="comp-tile-name">Navigation</div><div class="comp-tile-desc">Collapsible sidebar with icon-only mode and deep sub-navigation for a multi-module platform.</div></div>
+      <div class="comp-tile"><div class="comp-tile-name">Radio, checkbox + toggles</div><div class="comp-tile-desc">Full state coverage, including indeterminate selection for bulk actions in tables.</div></div>
+      <div class="comp-tile"><div class="comp-tile-name">Date picker</div><div class="comp-tile-desc">Single date and range selection for submission deadlines and contract dates.</div></div>
+      <div class="comp-tile"><div class="comp-tile-name">Tooltips</div><div class="comp-tile-desc">Plain, with header, and data summary variants for pricing breakdowns, in all four directions.</div></div>
+    </div>
+  </div>
+
+  <!-- 08 DEVELOPER COLLABORATION -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-developer-collaboration">08 — Developer Collaboration</span>
+    <h2 class="section-heading">Built with developers, not for them</h2>
+    <p class="body">Component feasibility was aligned with the development team before and during system creation — not after. Every component was technically viable before it was finalised in Figma, and developers understood the intent behind each state and variant rather than interpreting it post-handoff.</p>
+    <p class="body">Each component was reviewed together during handoff, with developer feedback built into the final specs. Files used consistent naming, documented states, and grouped variants that matched how developers would actually structure the code.</p>
+    <p class="body">Having a fixed reference meant developers could concentrate on complex business logic rather than making visual decisions that should have been resolved in design. <strong>Ambiguity in handoff dropped significantly.</strong></p>
+  </div>
+
+  <!-- 09 REFLECTION -->
+  <div class="section">
+    <span class="section-num cs-anchor" id="s-reflection">09 — Reflection</span>
+    <h2 class="section-heading">If given more time</h2>
+    <div class="reflection" style="margin-top:0;">
+      I would have introduced a formal <strong>token layer</strong> — separating primitive values from semantic assignments, so theming and future brand updates could flow through the whole system without touching individual components.
+    </div>
+
+    <div class="disclaimer">
+      To respect confidentiality agreements, visuals are recreated as simplified examples with placeholder content. I'd be happy to walk through the complete system, individual component decisions, and the handoff process during a conversation.
+    </div>
+  </div>
+
+</div>
+</div><!-- end .cs-layout --><!-- end .page -->
+
+<!-- NEXT CASE -->
+<section class="nx-wrap" aria-label="Next case study">
+  <div class="nx-top"><a class="nx-all" href="index.html#work">← All case studies</a><span class="nx-pips" aria-label="Case 2 of 3">Case 2 of 3 &nbsp;<i class=""></i><i class="on"></i><i class=""></i></span></div>
+  <a class="nx" href="case-study-ai.html">
+    <div>
+      <p class="nx-label"><span class="nx-num">03</span>Next case study</p>
+      <p class="nx-title">My AI Diet</p>
+      <ul class="nx-facts"><li>Side quest</li><li>Learning log</li><li>3 min read</li></ul>
+    </div>
+    <span class="nx-go">View <b aria-hidden="true">→</b></span>
+  </a>
+</section>
+
+
+
+<!-- FOOTER -->
+<div class="hk-ft" role="contentinfo">
+  <div class="hk-ft-in">
+    <div>
+      <p class="hk-status"><i aria-hidden="true"></i>Open to hybrid / remote roles</p>
+      <p class="hk-ft-h">Got a workflow that feels hard? <span>Let's make it obvious.</span></p>
+    </div>
+    <a class="hk-btn" href="harshitha-kalidindi-resume.pdf" target="_blank" rel="noopener">Resume <span aria-hidden="true">↗</span></a>
+  </div>
+  <div class="hk-ft-bottom">Designed and built by Harshitha with Figma, Claude, GitHub and Vercel</div>
+</div>
+
+<script>
+/* Hero: pixel paintbrush painting grid-aligned strokes */
+(function(){
+  var wrap=document.getElementById('heroWrap'), cv=document.getElementById('heroGrid');
+  if(!wrap||!cv||!cv.getContext)return;
+  var ctx=cv.getContext('2d'), CELL=10, PX=2.5, FADE=[1,.75,.5,.3,.15];
+  var PAINT=['#7F77DD','#D4537E','#C1672A','#4A8C4F','#BA7517'];
+  var SPRITE=['..........HH','.........HHH','........HHH.','.......HHH..','......HHH...','.....FFF....','....FFFF....','...BBBF.....','..BBBB......','.TBBB.......','TTTB........','TT..........'];
+  var RM=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W=0,H=0,t=0,trail={},ci=0,last=0,frame=0,visible=true,raf=null;
+  function size(){var d=Math.min(2,window.devicePixelRatio||1);W=wrap.clientWidth;H=wrap.clientHeight;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}
+  function pos(a){return{x:W/2+W*.42*Math.cos(a)+W*.03*Math.sin(3*a),y:H*.46+H*.38*Math.sin(a)};}
+  function grid(){ctx.globalAlpha=.1;ctx.fillStyle='#8a7f78';ctx.beginPath();for(var x=0;x<=W;x+=CELL)ctx.rect(x,0,1,H);for(var y=0;y<=H;y+=CELL)ctx.rect(0,y,W,1);ctx.fill();ctx.globalAlpha=1;}
+  function brush(x,y,col){var ox=Math.round(x),oy=Math.round(y-12*PX),s=Math.ceil(PX);
+    SPRITE.forEach(function(r,j){r.split('').forEach(function(c,i){if(c==='.')return;ctx.fillStyle=c==='H'?'#C1672A':c==='F'?'#B8B0A6':c==='B'?'#EDEAE3':col;ctx.fillRect(ox+i*PX,oy+j*PX,s,s);});});}
+  function paintAt(x,y){var gx=Math.floor(x/CELL),gy=Math.floor(y/CELL);
+    [[0,0],[1,0],[0,1],[-1,0],[0,-1]].forEach(function(d,k){if(k&&Math.random()<.6)return;trail[(gx+d[0])+','+(gy+d[1])]={c:PAINT[ci],s:0};});}
+  function draw(showBrush){ctx.clearRect(0,0,W,H);grid();
+    Object.keys(trail).forEach(function(k){var v=trail[k],g=k.split(',');ctx.globalAlpha=FADE[v.s]*.8;ctx.fillStyle=v.c;ctx.fillRect(+g[0]*CELL+1,+g[1]*CELL+1,CELL-1,CELL-1);});
+    ctx.globalAlpha=1;if(showBrush!==false){var p=pos(t);brush(p.x,p.y,PAINT[ci]);}}
+  function tick(ts){raf=null;if(!visible)return;raf=requestAnimationFrame(tick);if(ts-last<33)return;last=ts;frame++;
+    t+=0.022;if(t>Math.PI*2)t-=Math.PI*2;ci=Math.floor(t/(Math.PI*2)*PAINT.length)%PAINT.length;
+    var p=pos(t);paintAt(p.x,p.y);
+    if(frame%6===0){Object.keys(trail).forEach(function(k){trail[k].s++;if(trail[k].s>=FADE.length)delete trail[k];});}
+    draw();}
+  function start(){if(!raf&&!RM)raf=requestAnimationFrame(tick);}
+  size();
+  if(RM){for(var a=0;a<Math.PI*1.2;a+=.03){t=a;ci=Math.floor(a/(Math.PI*2)*PAINT.length);var q=pos(a);paintAt(q.x,q.y);}Object.keys(trail).forEach(function(k){trail[k].s=1;});draw();}
+  else start();
+  if('IntersectionObserver' in window){new IntersectionObserver(function(en){visible=en[0].isIntersecting;if(visible)start();}).observe(wrap);}
+  window.addEventListener('resize',function(){size();draw();});
+})();
+</script>
+
+<script>
+/* side contents: highlight the section you're reading */
+(function(){
+  var items=[].slice.call(document.querySelectorAll('.cs-toc a.cs-item')); if(!items.length) return;
+  var targets=items.map(function(a){return document.getElementById(a.getAttribute('href').slice(1));});
+  var bar=document.querySelector('.cs-toc');
+  function update(){
+    var line=window.innerHeight*0.35, cur=0;
+    targets.forEach(function(t,i){ if(t && t.getBoundingClientRect().top<=line) cur=i; });
+    items.forEach(function(a,i){ var on=i===cur; if(a.classList.contains('on')!==on){ a.classList.toggle('on',on);
+      if(on && bar && bar.scrollWidth>bar.clientWidth){ bar.scrollTo({left:a.offsetLeft-16,behavior:'smooth'}); } } });
+  }
+  var raf=null; window.addEventListener('scroll',function(){ if(!raf) raf=requestAnimationFrame(function(){raf=null;update();}); },{passive:true});
+  window.addEventListener('resize',update); update();
+})();
+</script>
+</body>
+</html>
